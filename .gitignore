@@ -1,3 +1,6 @@
+# claude-scout run logs (keep the directory via logs/.gitkeep, not the content)
+logs/*.log
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
