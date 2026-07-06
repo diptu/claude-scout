@@ -1,6 +1,8 @@
 """Curation: search/show/review. Only module allowed to touch library/ and trash/.
-search/show also read (never write) the repo's local .claude/skills/ directory,
-so specific skills like `ai-engineer` are findable alongside promoted ones."""
+search/show also read the repo's local .claude/skills/ directory, so specific
+skills like `ai-engineer` are findable alongside promoted ones. review() is the
+only place that writes into .claude/skills/, and only when the user opts in
+while promoting a draft."""
 import datetime
 import re
 import shutil
@@ -120,6 +122,12 @@ def review() -> None:
                 "date_added": datetime.date.today().isoformat(),
                 "eval_status": "passed",
             })
+            also_skills = input("also add to .claude/skills/? [y/N] ").strip().lower()
+            if also_skills == "y":
+                skills_dest = SKILLS_DIR / draft_dir.name
+                skills_dest.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(dest / "SKILL.md", skills_dest / "SKILL.md")
+                print(f"  -> also added to .claude/skills/{draft_dir.name}")
             shutil.rmtree(draft_dir)
         elif choice == "t":
             dest = TRASH_DIR / draft_dir.name

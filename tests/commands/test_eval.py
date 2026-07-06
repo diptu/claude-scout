@@ -20,6 +20,19 @@ def _canned_claude(answers):
     return fake_run
 
 
+def _canned_claude_with_failure(answers, fail_at, stderr):
+    """Like _canned_claude, but the call at index `fail_at` (0-based) returns nonzero."""
+    answer_iter = enumerate(answers)
+
+    def fake_run(*_args, **_kwargs):
+        i, answer = next(answer_iter)
+        if i == fail_at:
+            return MagicMock(returncode=1, stdout=answer, stderr=stderr)
+        return MagicMock(returncode=0, stdout=answer, stderr="")
+
+    return fake_run
+
+
 def _patch_dirs(monkeypatch, tmp_path, drafts_dir):
     monkeypatch.setattr(eval_mod, "DRAFTS_DIR", drafts_dir)
     monkeypatch.setattr(eval_mod, "FAILED_EVAL_DIR", drafts_dir / "failed-reason-eval")
@@ -58,7 +71,8 @@ def test_missing_frontmatter_fails_without_calling_claude(tmp_path, monkeypatch)
     assert calls == []
     assert (drafts_dir / "failed-reason-eval" / "b").exists()
     assert result["report"] == [
-        {"name": "b", "battery": "-", "tests": 0, "result": "failed"},
+        {"name": "b", "battery": "-", "tests": 0, "result": "failed",
+         "reason": "missing name/description in frontmatter"},
     ]
 
 
@@ -75,7 +89,7 @@ def test_frontmatter_only_pass_when_claude_unavailable(tmp_path, monkeypatch):
     assert result["failed"] == 0
     assert (drafts_dir / "c" / ".eval_status").read_text().strip() == "passed"
     assert result["report"] == [
-        {"name": "c", "battery": "frontmatter-only", "tests": 0, "result": "passed"},
+        {"name": "c", "battery": "frontmatter-only", "tests": 0, "result": "passed", "reason": ""},
     ]
 
 
@@ -96,7 +110,7 @@ def test_standard_battery_when_verify_says_applicable(tmp_path, monkeypatch):
 
     assert result["passed"] == 1
     assert result["report"] == [
-        {"name": "d", "battery": "standard", "tests": 2, "result": "passed"},
+        {"name": "d", "battery": "standard", "tests": 2, "result": "passed", "reason": ""},
     ]
 
 
@@ -117,8 +131,32 @@ def test_custom_test_designed_when_battery_not_applicable(tmp_path, monkeypatch)
 
     assert result["passed"] == 1
     assert result["report"] == [
-        {"name": "e", "battery": "custom", "tests": 1, "result": "passed"},
+        {"name": "e", "battery": "custom", "tests": 1, "result": "passed", "reason": ""},
     ]
     # the designed test is captured in the eval log for auditability
     log_file = next((tmp_path / "logs").glob("eval-*-e.log"))
     assert "Ask the skill to do its one thing." in log_file.read_text(encoding="utf-8")
+
+
+def test_failure_reason_captured_when_test_prompt_errors(tmp_path, monkeypatch):
+    drafts_dir = tmp_path / "drafts"
+    _make_draft(drafts_dir, "f", "---\nname: f\ndescription: x\n---\nbody")
+    prompts_file = tmp_path / "eval_tests.md"
+    prompts_file.write_text('1. "Generic test one."\n2. "Generic test two."\n')
+
+    _patch_dirs(monkeypatch, tmp_path, drafts_dir)
+    monkeypatch.setattr(eval_mod, "EVAL_PROMPTS_FILE", prompts_file)
+    monkeypatch.setattr(eval_mod, "_claude_available", lambda: True)
+    # verify -> APPLICABLE, then prompt 1 fails
+    monkeypatch.setattr(eval_mod.subprocess, "run",
+                        _canned_claude_with_failure(
+                            ["APPLICABLE", "boom"], fail_at=1, stderr="skill crashed on input"))
+
+    result = eval_mod.run()
+
+    assert result["passed"] == 0
+    assert result["failed"] == 1
+    assert result["report"] == [
+        {"name": "f", "battery": "standard", "tests": 2, "result": "failed",
+         "reason": "prompt 1/2 exited 1: skill crashed on input"},
+    ]

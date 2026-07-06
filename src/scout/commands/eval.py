@@ -98,7 +98,16 @@ def _verify_or_design_tests(content: str, prompts: list, log_lines: list):
     return [custom], "custom"
 
 
-def _run_test_prompts(content: str, prompts: list, log_lines: list) -> bool:
+def _short_reason(text: str, width: int = 80) -> str:
+    text = " ".join((text or "").split())
+    if not text:
+        return "no output"
+    if len(text) <= width:
+        return text
+    return text[: width - 1].rstrip() + "…"
+
+
+def _run_test_prompts(content: str, prompts: list, log_lines: list) -> tuple[bool, str]:
     for p_i, prompt in enumerate(prompts, start=1):
         print(f"  prompt {p_i}/{len(prompts)} ...", flush=True)
         full_prompt = f"{prompt}\n\n---\n{content}"
@@ -106,11 +115,12 @@ def _run_test_prompts(content: str, prompts: list, log_lines: list) -> bool:
             result = _run_claude(full_prompt)
         except subprocess.TimeoutExpired:
             log_lines.append("TIMEOUT")
-            return False
+            return False, f"prompt {p_i}/{len(prompts)} timed out after {TIMEOUT_SECONDS}s"
         log_lines.append(result.stdout or "")
         if result.returncode != 0:
-            return False
-    return True
+            reason = _short_reason(result.stderr or result.stdout)
+            return False, f"prompt {p_i}/{len(prompts)} exited {result.returncode}: {reason}"
+    return True, ""
 
 
 def run() -> dict:
@@ -132,15 +142,17 @@ def run() -> dict:
         ok = _has_valid_frontmatter(content)
         battery = "frontmatter-only"
         tests_run = 0
+        reason = ""
 
         if not ok:
             battery = "-"
+            reason = "missing name/description in frontmatter"
         elif claude_available:
             timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
             LOGS_DIR.mkdir(parents=True, exist_ok=True)
             log_lines: list[str] = []
             draft_prompts, battery = _verify_or_design_tests(content, prompts, log_lines)
-            ok = _run_test_prompts(content, draft_prompts, log_lines)
+            ok, reason = _run_test_prompts(content, draft_prompts, log_lines)
             tests_run = len(draft_prompts)
             log_path = LOGS_DIR / f"eval-{timestamp}-{draft_dir.name}.log"
             log_path.write_text("\n---\n".join(log_lines), encoding="utf-8")
@@ -167,6 +179,7 @@ def run() -> dict:
             "battery": battery,
             "tests": tests_run,
             "result": "passed" if ok else "failed",
+            "reason": "" if ok else reason,
         })
 
     return {"passed": passed, "failed": failed, "report": report}

@@ -2,7 +2,7 @@ PYTHON := python3
 export PYTHONPATH := src
 
 .PHONY: help install install-dev lint mypy pylint bandit test check \
-        harvest build eval scout search show review clean
+        harvest reset-harvest build eval scout search show review clean
 
 help:
 	@echo "claude-scout — available targets:"
@@ -15,6 +15,7 @@ help:
 	@echo "  make test          run pytest"
 	@echo "  make check         lint + mypy + pylint + bandit + test (what CI runs)"
 	@echo "  make harvest       run --mode harvest (add LIMIT=N, GITHUB_ONLY=1 to scope it)"
+	@echo "  make reset-harvest wipe candidates/discovery-*.json + seen.txt (interactive confirm)"
 	@echo "  make build         run --mode build (add LIMIT=N)"
 	@echo "  make eval          run --mode eval"
 	@echo "  make scout         run --mode scout (harvest + build + eval)"
@@ -51,6 +52,9 @@ GITHUB_ONLY_FLAG := $(if $(GITHUB_ONLY),--github-only,)
 
 harvest:
 	$(PYTHON) -m scout --mode harvest $(LIMIT_FLAG) $(GITHUB_ONLY_FLAG)
+
+reset-harvest:
+	$(PYTHON) -m scout --mode reset-harvest
 
 build:
 	$(PYTHON) -m scout --mode build $(LIMIT_FLAG)

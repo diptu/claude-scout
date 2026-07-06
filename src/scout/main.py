@@ -7,6 +7,7 @@ import sys
 from scout.commands import build as build_mod
 from scout.commands import eval as eval_mod
 from scout.commands import library
+from scout.commands import reset_harvest
 from scout.core.logger import log_event
 from scout.services import harvest_github, harvest_reddit
 
@@ -29,17 +30,28 @@ def cmd_build(args):
     log_event("build", summary)
 
 
-def _print_eval_report(rows):
+def _one_line(text: str, width: int = 100) -> str:
+    text = " ".join(text.split())
+    if len(text) <= width:
+        return text
+    return text[: width - 1].rstrip() + "…"
+
+
+def _print_eval_report(rows, reason_width: int = 50):
     if not rows:
         return
     name_w = max(len("skill"), *(len(r["name"]) for r in rows))
     battery_w = max(len("battery"), *(len(r["battery"]) for r in rows))
+    reasons = [_one_line(r.get("reason", ""), reason_width) for r in rows]
+    reason_w = max(len("reason"), *(len(r) for r in reasons))
     print("\nEval report:")
-    print(f"| {'skill':<{name_w}} | {'battery':<{battery_w}} | tests | result |")
-    print(f"|{'-' * (name_w + 2)}|{'-' * (battery_w + 2)}|-------|--------|")
+    print(f"| {'skill':<{name_w}} | {'battery':<{battery_w}} "
+          f"| tests | result | {'reason':<{reason_w}} |")
+    print(f"|{'-' * (name_w + 2)}|{'-' * (battery_w + 2)}|-------|--------|{'-' * (reason_w + 2)}|")
     for r in rows:
+        reason = _one_line(r.get("reason", ""), reason_width)
         print(f"| {r['name']:<{name_w}} | {r['battery']:<{battery_w}} "
-              f"| {r['tests']:>5} | {r['result']:<6} |")
+              f"| {r['tests']:>5} | {r['result']:<6} | {reason:<{reason_w}} |")
     print()
 
 
@@ -49,13 +61,6 @@ def cmd_eval(_args):
     summary = f"eval: {result['passed']} passed, {result['failed']} failed"
     print(summary)
     log_event("eval", summary)
-
-
-def _one_line(text: str, width: int = 100) -> str:
-    text = " ".join(text.split())
-    if len(text) <= width:
-        return text
-    return text[: width - 1].rstrip() + "…"
 
 
 def cmd_search(args):
@@ -96,6 +101,15 @@ def cmd_review(_args):
     log_event("review", "review session completed")
 
 
+def cmd_reset_harvest(_args):
+    result = reset_harvest.run()
+    log_event(
+        "reset-harvest",
+        f"removed {result['discovery_files_removed']} discovery file(s), "
+        f"seen_removed={result['seen_removed']}",
+    )
+
+
 def cmd_scout(args):
     harvest_result = harvest_github.run(limit=args.limit)
     build_result = build_mod.run(limit=args.limit)
@@ -120,7 +134,7 @@ def main():
     )
     parser.add_argument(
         "--mode", required=True,
-        choices=["harvest", "build", "eval", "search", "show", "review", "scout"],
+        choices=["harvest", "build", "eval", "search", "show", "review", "scout", "reset-harvest"],
     )
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--github-only", action="store_true")
@@ -149,6 +163,7 @@ def main():
         "eval": cmd_eval,
         "review": cmd_review,
         "scout": cmd_scout,
+        "reset-harvest": cmd_reset_harvest,
     }
     handlers[args.mode](args)
 

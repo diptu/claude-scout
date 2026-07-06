@@ -1,0 +1,9 @@
+{
+  "name": "hamelsmu-evals-skills",
+  "tags": [
+    "llm-eval-error-analysis"
+  ],
+  "source_url": "https://github.com/hamelsmu/evals-skills",
+  "date_added": "2026-07-07",
+  "eval_status": "passed"
+}

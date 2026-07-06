@@ -9,6 +9,7 @@ from scout.core.util import read_json, write_json
 
 CANDIDATES_DIR = PROJECT_ROOT / "candidates"
 SEEN_FILE = CANDIDATES_DIR / "seen.txt"
+LIBRARY_DIR = PROJECT_ROOT / "library"
 
 SUBREDDITS = ["ClaudeAI", "LocalLLaMA", "Anthropic"]
 KEYWORDS = ["claude skill", "claude code agent", "mcp server"]
@@ -21,6 +22,20 @@ def _load_seen() -> set:
     if not SEEN_FILE.exists():
         return set()
     return set(SEEN_FILE.read_text().splitlines())
+
+
+def _library_urls() -> set:
+    """URLs already promoted to library/ — checked in addition to seen.txt
+    so a reset-harvest (which wipes seen.txt) doesn't re-add skills that
+    are already curated."""
+    if not LIBRARY_DIR.exists():
+        return set()
+    urls = set()
+    for entry in LIBRARY_DIR.iterdir():
+        url = read_json(entry / "meta.json", default={}).get("source_url")
+        if url:
+            urls.add(url)
+    return urls
 
 
 def _append_seen(urls) -> None:
@@ -61,7 +76,7 @@ def run(limit=None) -> dict:
     subreddits = cfg.get("subreddits", SUBREDDITS)
     keywords = cfg.get("keywords", KEYWORDS)
 
-    seen = _load_seen()
+    seen = _load_seen() | _library_urls()
     new_urls: list[str] = []
     new_candidates: list[dict] = []
     errors = 0

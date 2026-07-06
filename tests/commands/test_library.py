@@ -79,6 +79,7 @@ def test_review_only_lists_passed(tmp_path, monkeypatch):
 def test_review_promote_moves_to_library(tmp_path, monkeypatch):
     drafts_dir = tmp_path / "drafts"
     library_dir = tmp_path / "library"
+    skills_dir = tmp_path / "skills"
     d = drafts_dir / "skill-x"
     d.mkdir(parents=True)
     (d / "SKILL.md").write_text("---\nname: skill-x\ndescription: d\n---\nbody")
@@ -88,12 +89,38 @@ def test_review_promote_moves_to_library(tmp_path, monkeypatch):
     monkeypatch.setattr(library, "DRAFTS_DIR", drafts_dir)
     monkeypatch.setattr(library, "LIBRARY_DIR", library_dir)
     monkeypatch.setattr(library, "TRASH_DIR", tmp_path / "trash")
-    monkeypatch.setattr("builtins.input", lambda prompt="": "p" if "promote" in prompt or "?" in prompt else "")
+    monkeypatch.setattr(library, "SKILLS_DIR", skills_dir)
 
-    inputs = iter(["p", "python,cli"])
+    inputs = iter(["p", "python,cli", "n"])
     monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
 
     library.review()
 
     assert (library_dir / "skill-x" / "SKILL.md").exists()
     assert not d.exists()
+    assert not (skills_dir / "skill-x").exists()
+
+
+def test_review_promote_can_also_add_to_claude_skills(tmp_path, monkeypatch):
+    drafts_dir = tmp_path / "drafts"
+    library_dir = tmp_path / "library"
+    skills_dir = tmp_path / "skills"
+    d = drafts_dir / "skill-y"
+    d.mkdir(parents=True)
+    (d / "SKILL.md").write_text("---\nname: skill-y\ndescription: d\n---\nbody")
+    (d / ".eval_status").write_text("passed\n")
+    (d / "candidate.json").write_text('{"url": "https://x/skill-y"}')
+
+    monkeypatch.setattr(library, "DRAFTS_DIR", drafts_dir)
+    monkeypatch.setattr(library, "LIBRARY_DIR", library_dir)
+    monkeypatch.setattr(library, "TRASH_DIR", tmp_path / "trash")
+    monkeypatch.setattr(library, "SKILLS_DIR", skills_dir)
+
+    inputs = iter(["p", "", "y"])
+    monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
+
+    library.review()
+
+    assert (library_dir / "skill-y" / "SKILL.md").exists()
+    assert (skills_dir / "skill-y" / "SKILL.md").read_text() == \
+        (library_dir / "skill-y" / "SKILL.md").read_text()
