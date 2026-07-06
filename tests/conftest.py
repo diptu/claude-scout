@@ -1,3 +1,4 @@
+"""Puts src/ on sys.path so tests import the package without installing it."""
 import sys
 from pathlib import Path
 

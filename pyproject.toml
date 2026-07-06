@@ -1,0 +1,49 @@
+[project]
+name = "claude-scout"
+version = "0.1.0"
+description = "Discover, draft, and evaluate Claude Code skills."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "praw>=8.0.2",
+    "pyyaml>=6.0.3",
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+claude-scout = "scout.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scout"]
+
+[dependency-groups]
+dev = [
+   "bandit>=1.9.4",
+   "mypy>=2.1.0",
+   "pylint>=4.0.6",
+   "pytest>=9.1.1",
+   "ruff>=0.15.20",
+   "types-pyyaml>=6.0.12",
+]
+
+[tool.mypy]
+files = ["src"]
+
+[tool.pylint."messages control"]
+disable = [
+    # TODO.md principle 2: the GitHub/Reddit harvesters deliberately
+    # duplicate each other rather than sharing a BaseScraper abstraction.
+    "duplicate-code",
+    # Module docstrings are required (C0114 stays on); per-function
+    # docstrings are not, matching the project's lean style.
+    "missing-function-docstring",
+]
+
+[tool.pylint.design]
+# The run() loops carry explicit progress/result counters instead of a
+# stats object — flat locals are the project style, so allow more of them.
+max-locals = 25

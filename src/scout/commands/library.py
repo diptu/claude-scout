@@ -1,13 +1,20 @@
-"""Curation: search/show/review. Only module allowed to touch library/ and trash/."""
+"""Curation: search/show/review. Only module allowed to touch library/ and trash/.
+search/show also read (never write) the repo's local .claude/skills/ directory,
+so specific skills like `ai-engineer` are findable alongside promoted ones."""
 import datetime
+import re
 import shutil
 
-from scout.util import PROJECT_ROOT, read_json, write_json
+from scout.core.config import PROJECT_ROOT
+from scout.core.util import read_json, write_json
 
 DRAFTS_DIR = PROJECT_ROOT / "drafts"
 LIBRARY_DIR = PROJECT_ROOT / "library"
+SKILLS_DIR = PROJECT_ROOT / ".claude" / "skills"
 TRASH_DIR = PROJECT_ROOT / "trash"
 SKIP_DIR_NAMES = {"failed", "failed-reason-eval"}
+
+DESCRIPTION_RE = re.compile(r"^description:\s*(.+)$", re.MULTILINE)
 
 
 def _iter_library_entries():
@@ -19,21 +26,58 @@ def _iter_library_entries():
             yield entry, read_json(meta_path, default={})
 
 
+def _skill_description(skill_md) -> str:
+    """First `description:` frontmatter line, else the first non-empty line.
+    utf-8 with errors="replace": these files are third-party-ish and may
+    contain emoji that the Windows locale codec would choke on."""
+    text = skill_md.read_text(encoding="utf-8", errors="replace")
+    match = DESCRIPTION_RE.search(text)
+    if match:
+        return match.group(1).strip()
+    for line in text.splitlines():
+        stripped = line.strip().lstrip("#").strip()
+        if stripped and stripped != "---":
+            return stripped
+    return ""
+
+
+def _iter_skills_entries():
+    """Local .claude/skills/ entries, normalized to the same meta shape as
+    library/ entries (no meta.json there — name comes from the directory,
+    description from SKILL.md frontmatter)."""
+    if not SKILLS_DIR.exists():
+        return
+    for entry in sorted(SKILLS_DIR.iterdir()):
+        skill_md = entry / "SKILL.md"
+        if entry.is_dir() and skill_md.exists():
+            yield entry, {
+                "name": entry.name,
+                "tags": [],
+                "description": _skill_description(skill_md),
+                "source_url": str(skill_md.relative_to(PROJECT_ROOT)),
+            }
+
+
 def search(keyword: str) -> list:
     keyword = keyword.lower()
     matches = []
-    for _, meta in _iter_library_entries():
-        haystack = " ".join([meta.get("name", ""), *meta.get("tags", [])]).lower()
+    for _, meta in (*_iter_library_entries(), *_iter_skills_entries()):
+        haystack = " ".join([
+            meta.get("name", ""),
+            meta.get("description", ""),
+            *meta.get("tags", []),
+        ]).lower()
         if keyword in haystack:
             matches.append(meta)
     return matches
 
 
 def show(name: str) -> str:
-    skill_path = LIBRARY_DIR / name / "SKILL.md"
-    if not skill_path.exists():
-        raise FileNotFoundError(f"no skill named '{name}' in library/")
-    return skill_path.read_text()
+    for base in (LIBRARY_DIR, SKILLS_DIR):
+        skill_path = base / name / "SKILL.md"
+        if skill_path.exists():
+            return skill_path.read_text(encoding="utf-8", errors="replace")
+    raise FileNotFoundError(f"no skill named '{name}' in library/ or .claude/skills/")
 
 
 def _passed_drafts():
@@ -56,7 +100,7 @@ def review() -> None:
         return
 
     for draft_dir in drafts:
-        skill_md = (draft_dir / "SKILL.md").read_text()
+        skill_md = (draft_dir / "SKILL.md").read_text(encoding="utf-8", errors="replace")
         candidate = read_json(draft_dir / "candidate.json", default={})
         print(f"\n=== {draft_dir.name} ===")
         print(skill_md[:400])

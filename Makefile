@@ -1,7 +1,7 @@
-SRC := src/main.py
 PYTHON := python3
+export PYTHONPATH := src
 
-.PHONY: help install install-dev lint test check \
+.PHONY: help install install-dev lint mypy pylint bandit test check \
         harvest build eval scout search show review clean
 
 help:
@@ -9,8 +9,11 @@ help:
 	@echo "  make install       install runtime dependencies"
 	@echo "  make install-dev   install runtime + dev dependencies (pytest, ruff)"
 	@echo "  make lint          run ruff"
+	@echo "  make mypy          run mypy type checks"
+	@echo "  make pylint        run pylint"
+	@echo "  make bandit        run bandit security checks"
 	@echo "  make test          run pytest"
-	@echo "  make check         lint + test (what CI runs)"
+	@echo "  make check         lint + mypy + pylint + bandit + test (what CI runs)"
 	@echo "  make harvest       run --mode harvest (add LIMIT=N, GITHUB_ONLY=1 to scope it)"
 	@echo "  make build         run --mode build (add LIMIT=N)"
 	@echo "  make eval          run --mode eval"
@@ -21,42 +24,51 @@ help:
 	@echo "  make clean         remove __pycache__/.pytest_cache"
 
 install:
-	$(PYTHON) -m pip install -r requirements.txt
+	$(PYTHON) -m pip install -e .
 
 install-dev: install
-	$(PYTHON) -m pip install pytest ruff
+	$(PYTHON) -m pip install pytest ruff mypy pylint bandit types-pyyaml
 
 lint:
 	$(PYTHON) -m ruff check .
 
+mypy:
+	$(PYTHON) -m mypy
+
+pylint:
+	$(PYTHON) -m pylint src tests
+
+bandit:
+	$(PYTHON) -m bandit -r src -q
+
 test:
 	$(PYTHON) -m pytest tests/ -v
 
-check: lint test
+check: lint mypy pylint bandit test
 
 LIMIT_FLAG := $(if $(LIMIT),--limit $(LIMIT),)
 GITHUB_ONLY_FLAG := $(if $(GITHUB_ONLY),--github-only,)
 
 harvest:
-	$(PYTHON) $(SRC) --mode harvest $(LIMIT_FLAG) $(GITHUB_ONLY_FLAG)
+	$(PYTHON) -m scout --mode harvest $(LIMIT_FLAG) $(GITHUB_ONLY_FLAG)
 
 build:
-	$(PYTHON) $(SRC) --mode build $(LIMIT_FLAG)
+	$(PYTHON) -m scout --mode build $(LIMIT_FLAG)
 
 eval:
-	$(PYTHON) $(SRC) --mode eval
+	$(PYTHON) -m scout --mode eval
 
 scout:
-	$(PYTHON) $(SRC) --mode scout $(LIMIT_FLAG)
+	$(PYTHON) -m scout --mode scout $(LIMIT_FLAG)
 
 search:
-	$(PYTHON) $(SRC) --mode search $(KEYWORD)
+	$(PYTHON) -m scout --mode search $(KEYWORD)
 
 show:
-	$(PYTHON) $(SRC) --mode show $(NAME)
+	$(PYTHON) -m scout --mode show $(NAME)
 
 review:
-	$(PYTHON) $(SRC) --mode review
+	$(PYTHON) -m scout --mode review
 
 clean:
 	find . -type d -name "__pycache__" -not -path "./.git/*" -exec rm -rf {} +

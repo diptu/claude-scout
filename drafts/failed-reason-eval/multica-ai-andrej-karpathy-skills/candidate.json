@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "multica-ai/andrej-karpathy-skills",
+  "url": "https://github.com/multica-ai/andrej-karpathy-skills",
+  "description": "A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy's observations on LLM coding pitfalls.",
+  "stars": 188418,
+  "discovered_at": "2026-07-06T15:46:38.587719+00:00"
+}

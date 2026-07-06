@@ -1,6 +1,6 @@
 import pytest
 
-from scout import library
+from scout.commands import library
 
 
 def test_search_matches_tag(tmp_path, monkeypatch):
@@ -10,6 +10,7 @@ def test_search_matches_tag(tmp_path, monkeypatch):
     (entry / "meta.json").write_text('{"name": "skill-a", "tags": ["python", "cli"]}')
 
     monkeypatch.setattr(library, "LIBRARY_DIR", library_dir)
+    monkeypatch.setattr(library, "SKILLS_DIR", tmp_path / "skills")
 
     results = library.search("python")
     assert len(results) == 1
@@ -18,8 +19,43 @@ def test_search_matches_tag(tmp_path, monkeypatch):
     assert library.search("nonexistent") == []
 
 
+def test_search_finds_local_skill_by_name(tmp_path, monkeypatch):
+    skills_dir = tmp_path / ".claude" / "skills"
+    entry = skills_dir / "ai-engineer"
+    entry.mkdir(parents=True)
+    (entry / "SKILL.md").write_text(
+        "---\nname: ai-engineer\ndescription: Build production-grade AI features.\n---\nbody",
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(library, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(library, "LIBRARY_DIR", tmp_path / "library")
+    monkeypatch.setattr(library, "SKILLS_DIR", skills_dir)
+
+    results = library.search("ai-engineer")
+    assert len(results) == 1
+    assert results[0]["name"] == "ai-engineer"
+    assert results[0]["description"] == "Build production-grade AI features."
+
+    # description text is searchable too
+    assert library.search("production-grade")[0]["name"] == "ai-engineer"
+
+
+def test_show_falls_back_to_local_skills(tmp_path, monkeypatch):
+    skills_dir = tmp_path / ".claude" / "skills"
+    entry = skills_dir / "ai-engineer"
+    entry.mkdir(parents=True)
+    (entry / "SKILL.md").write_text("skill body \U0001f9e0", encoding="utf-8")
+
+    monkeypatch.setattr(library, "LIBRARY_DIR", tmp_path / "library")
+    monkeypatch.setattr(library, "SKILLS_DIR", skills_dir)
+
+    assert library.show("ai-engineer") == "skill body \U0001f9e0"
+
+
 def test_show_raises_for_missing(tmp_path, monkeypatch):
     monkeypatch.setattr(library, "LIBRARY_DIR", tmp_path / "library")
+    monkeypatch.setattr(library, "SKILLS_DIR", tmp_path / "skills")
     with pytest.raises(FileNotFoundError):
         library.show("nope")
 

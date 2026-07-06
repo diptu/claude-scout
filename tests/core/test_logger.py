@@ -1,11 +1,11 @@
-from scout import util
+from scout.core import logger
 
 
 def test_log_event_appends_timestamped_line(tmp_path, monkeypatch):
-    monkeypatch.setattr(util, "LOGS_DIR", tmp_path / "logs")
+    monkeypatch.setattr(logger, "LOGS_DIR", tmp_path / "logs")
 
-    util.log_event("harvest", "harvest: 2 new candidates, 0 already seen, 0 errors")
-    util.log_event("harvest", "harvest: 1 new candidates, 2 already seen, 0 errors")
+    logger.log_event("harvest", "harvest: 2 new candidates, 0 already seen, 0 errors")
+    logger.log_event("harvest", "harvest: 1 new candidates, 2 already seen, 0 errors")
 
     log_file = tmp_path / "logs" / "harvest.log"
     lines = log_file.read_text().splitlines()
@@ -18,10 +18,10 @@ def test_log_event_appends_timestamped_line(tmp_path, monkeypatch):
 
 
 def test_log_event_creates_separate_files_per_stage(tmp_path, monkeypatch):
-    monkeypatch.setattr(util, "LOGS_DIR", tmp_path / "logs")
+    monkeypatch.setattr(logger, "LOGS_DIR", tmp_path / "logs")
 
-    util.log_event("build", "build: 1 drafted, 0 failed")
-    util.log_event("eval", "eval: 1 passed, 0 failed")
+    logger.log_event("build", "build: 1 drafted, 0 failed")
+    logger.log_event("eval", "eval: 1 passed, 0 failed")
 
     assert (tmp_path / "logs" / "build.log").exists()
     assert (tmp_path / "logs" / "eval.log").exists()

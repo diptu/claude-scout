@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from scout import build
+from scout.commands import build
 
 
 def _write_candidates(tmp_path, candidates_dir):

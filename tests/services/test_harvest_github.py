@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from scout import harvest_github
+from scout.services import harvest_github
 
 
 def _mock_response(items):

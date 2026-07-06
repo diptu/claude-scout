@@ -4,35 +4,35 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project status
 
-Implemented and verified end-to-end (real GitHub API + real `claude` CLI calls). Source lives under `src/` (`src/main.py`, `src/scout/`); data directories (`candidates/`, `drafts/`, `library/`, `trash/`, `logs/`, `prompts/`) stay at the repo root, not under `src/`.
+Implemented and verified end-to-end (real GitHub API + real `claude` CLI calls). Source lives under `src/scout/`, split into `commands/` (build, eval, library), `core/` (config, logger, exceptions, util), and `services/` (GitHub/Reddit harvesters), with `main.py` (argparse dispatch) and `__main__.py` (`python -m scout`) at the package root; `tests/` mirrors the same subdirectories. User-editable candidacy criteria live in `defaults/config.yml` (read by `scout.core.config.load_config`, with built-in fallbacks). Data directories (`candidates/`, `drafts/`, `library/`, `trash/`, `logs/`, `prompts/`) stay at the repo root, not under `src/`.
 
 ## Commands
 
 Use the `Makefile` rather than invoking `python` directly — it's the single source of truth for how to run anything here:
 
 ```
-make install-dev        # runtime deps (requests, praw) + pytest, ruff
-make check               # lint (ruff) + test (pytest) — what CI runs
+make install-dev        # runtime deps + dev tools (pytest, ruff, mypy, pylint, bandit)
+make check               # lint + mypy + pylint + bandit + test — what CI runs
 make harvest             # --mode harvest (LIMIT=N, GITHUB_ONLY=1 to scope)
 make build               # --mode build (LIMIT=N)
 make eval                # --mode eval
 make scout               # --mode scout (harvest + build + eval, in-process)
-make search KEYWORD=git  # --mode search
-make show NAME=<name>    # --mode show
+make search KEYWORD=git  # --mode search (covers library/ and .claude/skills/)
+make show NAME=<name>    # --mode show (e.g. NAME=ai-engineer)
 make review              # --mode review (interactive)
 ```
 
-A single test: `python3 -m pytest tests/test_build.py::test_skip_already_drafted -v` (module import resolves via `tests/conftest.py`, which puts `src/` on `sys.path`).
+A single test: `python3 -m pytest tests/commands/test_build.py::test_skip_already_drafted -v` (module import resolves via `tests/conftest.py`, which puts `src/` on `sys.path`).
 
 ## What this project is
 
 claude-scout is a CLI tool that automates discovering, drafting, and evaluating Claude Code skills:
 
 **Discovery → Build → Eval** loop:
-- **Harvest**: pull candidate skills from GitHub (`scout/harvest_github.py`) and Reddit (`scout/harvest_reddit.py`, degrades to a no-op without `praw`/credentials configured) into `candidates/discovery-YYYY-MM-DD.json`, deduped via a flat `candidates/seen.txt`.
+- **Harvest**: pull candidate skills from GitHub (`scout/services/harvest_github.py`) and Reddit (`scout/services/harvest_reddit.py`, degrades to a no-op without `praw`/credentials configured) into `candidates/discovery-YYYY-MM-DD.json`, deduped via a flat `candidates/seen.txt`; thresholds come from `defaults/config.yml`.
 - **Build**: shell out to the `claude` CLI (`subprocess.run(["claude", "-p", ...])`) per candidate to draft a `SKILL.md` into `drafts/<name>/`, treating candidate content as untrusted data (see `prompts/build.md`'s `<candidate_data>` delimiters).
-- **Eval**: run a fixed battery of test prompts (`prompts/eval_tests.md`) against each draft via the `claude` CLI, writing a `drafts/<name>/.eval_status` sentinel (`passed`/`failed`); pass/fail only checks "does it explode," not skill quality.
-- **Review**: a human promotes surviving drafts from `drafts/` into `library/`, or discards to `trash/`, via `scout/library.py`'s interactive `review()`.
+- **Eval**: per draft, first ask the `claude` CLI whether the fixed battery (`prompts/eval_tests.md`) applies to that skill — if not, it designs one short tailored test instead — then run the tests via the CLI, writing a `drafts/<name>/.eval_status` sentinel (`passed`/`failed`) and printing a tabular report. Pass/fail only checks "does it explode" (exit codes/timeouts), never answer quality — the LLM designs tests, it never grades.
+- **Review**: a human promotes surviving drafts from `drafts/` into `library/`, or discards to `trash/`, via `scout/commands/library.py`'s interactive `review()`.
 
 Folder layout (all at repo root, not under `src/`): `candidates/`, `drafts/` (with `drafts/failed/` and `drafts/failed-reason-eval/`), `library/`, `trash/`, `prompts/`, `logs/`, `docs/`.
 

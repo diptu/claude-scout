@@ -5,7 +5,8 @@ import time
 
 import requests
 
-from scout.util import PROJECT_ROOT, read_json, write_json
+from scout.core.config import PROJECT_ROOT, load_config
+from scout.core.util import read_json, write_json
 
 CANDIDATES_DIR = PROJECT_ROOT / "candidates"
 SEEN_FILE = CANDIDATES_DIR / "seen.txt"
@@ -47,16 +48,21 @@ def _respect_rate_limit(response) -> None:
 
 
 def run(limit=None) -> dict:
+    cfg = load_config().get("github", {})
+    min_stars = cfg.get("min_stars", MIN_STARS)
+    max_age_days = cfg.get("max_age_days", MAX_AGE_DAYS)
+    keywords = cfg.get("keywords", KEYWORDS)
+
     seen = _load_seen()
-    new_urls = []
-    new_candidates = []
+    new_urls: list[str] = []
+    new_candidates: list[dict] = []
     errors = 0
     seen_skipped = 0
 
-    since = (datetime.date.today() - datetime.timedelta(days=MAX_AGE_DAYS)).isoformat()
+    since = (datetime.date.today() - datetime.timedelta(days=max_age_days)).isoformat()
 
-    for keyword in KEYWORDS:
-        query = f"{keyword} in:name,description stars:>={MIN_STARS} pushed:>={since}"
+    for keyword in keywords:
+        query = f"{keyword} in:name,description stars:>={min_stars} pushed:>={since}"
         try:
             resp = requests.get(
                 API_URL,

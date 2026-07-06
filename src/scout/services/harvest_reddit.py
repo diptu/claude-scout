@@ -4,7 +4,8 @@ architecture.md's "no BaseScraper" decision."""
 import datetime
 import os
 
-from scout.util import PROJECT_ROOT, read_json, write_json
+from scout.core.config import PROJECT_ROOT, load_config
+from scout.core.util import read_json, write_json
 
 CANDIDATES_DIR = PROJECT_ROOT / "candidates"
 SEEN_FILE = CANDIDATES_DIR / "seen.txt"
@@ -31,7 +32,9 @@ def _append_seen(urls) -> None:
 
 def _get_reddit():
     try:
-        import praw
+        # Lazy on purpose: praw is optional and this source degrades to a
+        # no-op without it.
+        import praw  # pylint: disable=import-outside-toplevel
     except ImportError:
         return None
     client_id = os.environ.get("REDDIT_CLIENT_ID")
@@ -51,26 +54,35 @@ def run(limit=None) -> dict:
         # Degrades gracefully: no praw installed or no credentials configured.
         return {"new": 0, "seen_skipped": 0, "errors": 0}
 
+    cfg = load_config().get("reddit", {})
+    min_score = cfg.get("min_score", MIN_SCORE)
+    min_comments = cfg.get("min_comments", MIN_COMMENTS)
+    max_age_days = cfg.get("max_age_days", MAX_AGE_DAYS)
+    subreddits = cfg.get("subreddits", SUBREDDITS)
+    keywords = cfg.get("keywords", KEYWORDS)
+
     seen = _load_seen()
-    new_urls = []
-    new_candidates = []
+    new_urls: list[str] = []
+    new_candidates: list[dict] = []
     errors = 0
     seen_skipped = 0
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=MAX_AGE_DAYS)
+    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=max_age_days)
 
-    for sub_name in SUBREDDITS:
+    for sub_name in subreddits:
         try:
             subreddit = reddit.subreddit(sub_name)
             for post in subreddit.new(limit=50):
                 if limit is not None and len(new_candidates) >= limit:
                     break
-                posted_at = datetime.datetime.utcfromtimestamp(post.created_utc)
+                posted_at = datetime.datetime.fromtimestamp(
+                    post.created_utc, tz=datetime.timezone.utc
+                )
                 if posted_at < cutoff:
                     continue
-                if post.score <= MIN_SCORE or post.num_comments <= MIN_COMMENTS:
+                if post.score <= min_score or post.num_comments <= min_comments:
                     continue
                 text = f"{post.title} {post.selftext}".lower()
-                if not any(k in text for k in KEYWORDS):
+                if not any(k in text for k in keywords):
                     continue
                 url = f"https://reddit.com{post.permalink}"
                 if url in seen or url in new_urls:
@@ -85,7 +97,9 @@ def run(limit=None) -> dict:
                     "discovered_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 })
                 new_urls.append(url)
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught
+            # praw raises assorted exception types; one bad subreddit must
+            # not abort the others, so count it and move on.
             errors += 1
             continue
 

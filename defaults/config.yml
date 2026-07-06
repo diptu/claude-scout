@@ -1,0 +1,33 @@
+# claude-scout harvest configuration.
+#
+# Basic candidacy criteria for each discovery source. Edit the values to
+# tighten or loosen what gets pulled into candidates/.
+
+github:
+  # Minimum stargazer count a repo needs to become a candidate.
+  min_stars: 1000
+  # Only consider repos pushed to within the last N days.
+  max_age_days: 180
+  # Search terms matched against repo name and description.
+  keywords:
+    - claude skill
+    - claude code agent
+    - mcp server
+
+reddit:
+  # Minimum post score (upvotes) for a post to become a candidate.
+  min_score: 50
+  # Minimum number of comments on the post.
+  min_comments: 10
+  # Only consider posts from the last N days.
+  max_age_days: 7
+  # Subreddits scanned by the harvester.
+  subreddits:
+    - ClaudeAI
+    - LocalLLaMA
+    - Anthropic
+  # A post qualifies only if its title/body mentions one of these keywords.
+  keywords:
+    - claude skill
+    - claude code agent
+    - mcp server

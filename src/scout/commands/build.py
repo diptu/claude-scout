@@ -1,10 +1,12 @@
 """Draft generation via the claude CLI. See backend_service_specs/build.md."""
 import datetime
 import glob
-import subprocess
+import subprocess  # nosec B404
 from pathlib import Path
 
-from scout.util import PROJECT_ROOT, log_event, read_json, slugify, write_json
+from scout.core.config import PROJECT_ROOT
+from scout.core.logger import log_event
+from scout.core.util import read_json, slugify, write_json
 
 CANDIDATES_DIR = PROJECT_ROOT / "candidates"
 DRAFTS_DIR = PROJECT_ROOT / "drafts"
@@ -27,7 +29,7 @@ def _already_handled(name_slug: str) -> bool:
 
 
 def _build_prompt(candidate: dict) -> str:
-    template = PROMPT_TEMPLATE.read_text()
+    template = PROMPT_TEMPLATE.read_text(encoding="utf-8")
     return template.format(
         name=candidate.get("name", ""),
         url=candidate.get("url", ""),
@@ -62,14 +64,19 @@ def run(limit=None) -> dict:
         log_path = LOGS_DIR / f"build-{timestamp}-{name_slug}.log"
 
         try:
-            result = subprocess.run(
+            result = subprocess.run(  # nosec B603 B607
                 ["claude", "-p", prompt],
                 capture_output=True,
-                text=True,
+                # claude emits UTF-8; without this, Windows decodes with the
+                # locale codepage and stdout becomes None on the first
+                # non-cp1252 byte.
+                encoding="utf-8",
+                errors="replace",
                 timeout=TIMEOUT_SECONDS,
+                check=False,
             )
         except (subprocess.TimeoutExpired, FileNotFoundError) as exc:
-            log_path.write_text(f"error: {exc}\n")
+            log_path.write_text(f"error: {exc}\n", encoding="utf-8")
             fail_dir = FAILED_DIR / name_slug
             fail_dir.mkdir(parents=True, exist_ok=True)
             write_json(fail_dir / "candidate.json", candidate)
@@ -78,7 +85,9 @@ def run(limit=None) -> dict:
             log_event("build", f"[{i}/{total}] {name_slug}: failed ({exc})")
             continue
 
-        log_path.write_text(f"stdout:\n{result.stdout}\n\nstderr:\n{result.stderr}\n")
+        log_path.write_text(
+            f"stdout:\n{result.stdout}\n\nstderr:\n{result.stderr}\n", encoding="utf-8"
+        )
 
         if result.returncode != 0 or not result.stdout.strip():
             fail_dir = FAILED_DIR / name_slug
@@ -91,7 +100,7 @@ def run(limit=None) -> dict:
 
         draft_dir = DRAFTS_DIR / name_slug
         draft_dir.mkdir(parents=True, exist_ok=True)
-        (draft_dir / "SKILL.md").write_text(result.stdout)
+        (draft_dir / "SKILL.md").write_text(result.stdout, encoding="utf-8")
         write_json(draft_dir / "candidate.json", candidate)
         drafted += 1
         print("  -> drafted", flush=True)
