@@ -1,8 +1,8 @@
 # claude-scout — User Manual
 
 claude-scout discovers, drafts, and evaluates Claude Code skills through one
-loop: **Harvest → Build → Eval → Review**. This manual covers day-to-day use
-of the CLI. For the internal architecture, see `CLAUDE.md`.
+loop: **Harvest → Build → Eval → Committee → Review**. This manual covers
+day-to-day use of the CLI. For the internal architecture, see `CLAUDE.md`.
 
 ## 1. Setup
 
@@ -34,11 +34,13 @@ the single source of truth for how each stage is invoked.
 make harvest LIMIT=20       # pull candidates from GitHub + Reddit
 make build LIMIT=20         # draft a SKILL.md per candidate via `claude`
 make eval                   # smoke-test each draft
-make review                 # you promote survivors to library/, or trash them
+make committee              # hiring-committee vote: auto promote/reject (see §5a)
+make review                 # manual fallback for anything the committee left undecided
 ```
 
-Or run harvest+build+eval in one shot with `make scout LIMIT=20` (review is
-always manual — it's the human quality gate).
+Or run harvest+build+eval+committee in one shot with `make scout LIMIT=20` —
+the committee stage decides library/ vs trash/ automatically; `make review`
+is only needed for drafts the committee couldn't reach a quorum on.
 
 ## 3. Harvest
 
@@ -126,14 +128,48 @@ drafts get a `.eval_status` sentinel and stay in `drafts/`; failing drafts
 move to `drafts/failed-reason-eval/`. Full transcripts land in
 `logs/eval-<timestamp>-<name>.log`.
 
+## 5a. Committee
+
+```
+make committee
+```
+
+Fully automatic promote/reject gate for eval-passed drafts — no human in the
+loop, unlike `review` below. A fixed panel of exec personas (`defaults/config.yml`'s
+`committee.voters`: CEO, CTO, Solution Architect, Security Lead, QA Lead by
+default) each cast one `claude -p` vote per draft, scoring it 1-5 on
+usefulness / uniqueness (vs. the existing library) / quality / safety (see
+`prompts/committee.md`).
+
+- The overall average across all successful voters and dimensions decides
+  the outcome: `>= committee.passing_score` (default 3.5) promotes straight
+  to `library/<name>/` (with a `committee_verdict.json` audit record
+  alongside `meta.json`); otherwise it moves to `trash/<name>/` (same
+  verdict file included).
+- If fewer than `committee.min_voters` voters return a parseable vote (default
+  5 of 5, i.e. unanimous participation required — e.g. `claude` timed out or
+  returned unparseable output for any of them), the draft is left untouched
+  in `drafts/` rather than decided on partial data — it'll show up under
+  `make review` instead.
+- If a draft's name already exists in `library/` (a naming collision — e.g. a
+  stray leftover draft with the same name as an already-curated skill), the
+  committee skips it entirely (no `claude` calls spent) and leaves it in
+  `drafts/` rather than silently overwriting the existing curated entry's
+  `SKILL.md`/`meta.json`/tags. Reconcile these manually (rename, delete the
+  redundant draft, or compare and re-promote by hand).
+- Like `eval`, this never touches `.claude/skills/` — promoting there is
+  still a manual, explicit choice via `review`.
+- Full per-voter transcripts land in `logs/committee-<timestamp>-<name>.log`.
+
 ## 6. Review
 
 ```
 make review
 ```
 
-Interactive. For each eval-passed draft, prints the first 400 chars of its
-`SKILL.md` and asks:
+Interactive fallback for drafts the committee left undecided (no quorum) or
+that predate this gate. For each eval-passed draft still sitting in
+`drafts/`, prints the first 400 chars of its `SKILL.md` and asks:
 
 - `p` — promote to `library/<name>/` (you'll be asked for optional
   comma-separated tags). You're then asked `also add to .claude/skills/?
@@ -172,10 +208,12 @@ niche (e.g. `ai-engineer`):
    to terms specific to that niche instead of the generic defaults.
 3. `make harvest LIMIT=10 GITHUB_ONLY=1` — scoped discovery.
 4. `make build LIMIT=10` then `make eval` — draft and smoke-test candidates.
-5. Manually read each surviving draft against your baseline — eval only
-   proves "doesn't explode," not "is better."
-6. `make review` to promote a genuine improvement (optionally also into
-   `.claude/skills/`).
+5. `make committee` — the hiring-committee vote auto-promotes a genuine
+   improvement to `library/` or auto-trashes a weak one; read the surviving
+   draft or its `committee_verdict.json` against your baseline either way,
+   since the committee scores quality but doesn't know about your baseline.
+6. If a draft didn't reach quorum, `make review` to decide it manually
+   (optionally also into `.claude/skills/`).
 7. If replacing the old skill outright, remove `.claude/skills/<old-name>/`
    yourself — nothing here does that automatically.
 
@@ -188,10 +226,11 @@ niche (e.g. `ai-engineer`):
 | `make reset-harvest` | Wipe discovery files + seen.txt (interactive confirm) |
 | `make build [LIMIT=N]` | Draft `SKILL.md` for undrafted candidates |
 | `make eval` | Smoke-test undrafted-but-unevaluated drafts |
-| `make scout [LIMIT=N]` | harvest + build + eval, one shot |
+| `make committee` | Hiring-committee vote: auto promote/reject eval-passed drafts |
+| `make scout [LIMIT=N]` | harvest + build + eval + committee, one shot |
 | `make search KEYWORD=...` | Substring search across `library/` + `.claude/skills/` |
 | `make show NAME=...` | Print a skill's full `SKILL.md` |
-| `make review` | Interactively promote/trash eval-passed drafts |
+| `make review` | Interactively promote/trash drafts the committee left undecided |
 | `make lint` / `make mypy` / `make pylint` / `make bandit` / `make test` | Individual checks |
 | `make check` | Everything CI runs (lint + mypy + pylint + bandit + test) |
 | `make clean` | Remove `__pycache__`/`.pytest_cache`/`.ruff_cache` |
@@ -202,10 +241,10 @@ All at repo root, not under `src/`:
 
 - `candidates/` — raw harvest output (`discovery-*.json`) + `seen.txt` dedup log
 - `drafts/` — in-progress skills (`failed/` and `failed-reason-eval/` subfolders for build/eval failures)
-- `library/` — promoted, curated skills (`meta.json` + `SKILL.md` per skill)
-- `trash/` — discarded drafts
-- `logs/` — per-run transcripts and stage summaries
-- `prompts/` — prompt templates fed to `claude` for build/eval
+- `library/` — promoted, curated skills (`meta.json` + `SKILL.md` + `committee_verdict.json` per skill, when promoted via the committee)
+- `trash/` — discarded drafts (includes `committee_verdict.json` when rejected via the committee)
+- `logs/` — per-run transcripts and stage summaries (including one `committee-<timestamp>-<name>.log` per draft the committee voted on)
+- `prompts/` — prompt templates fed to `claude` for build/eval/committee
 - `.claude/skills/` — skills actually usable in this environment (generic ones plus anything you opted to also add during review)
 
 ## 11. Single test

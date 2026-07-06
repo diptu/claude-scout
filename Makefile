@@ -2,7 +2,7 @@ PYTHON := python3
 export PYTHONPATH := src
 
 .PHONY: help install install-dev lint mypy pylint bandit test check \
-        harvest reset-harvest build eval scout search show review clean
+        harvest reset-harvest build eval committee scout search show review clean
 
 help:
 	@echo "claude-scout — available targets:"
@@ -18,7 +18,8 @@ help:
 	@echo "  make reset-harvest wipe candidates/discovery-*.json + seen.txt (interactive confirm)"
 	@echo "  make build         run --mode build (add LIMIT=N)"
 	@echo "  make eval          run --mode eval"
-	@echo "  make scout         run --mode scout (harvest + build + eval)"
+	@echo "  make committee     run --mode committee (hiring-committee vote: auto promote/reject)"
+	@echo "  make scout         run --mode scout (harvest + build + eval + committee)"
 	@echo "  make search KEYWORD=git   run --mode search"
 	@echo "  make show NAME=git-commit-craft   run --mode show"
 	@echo "  make review        run --mode review (interactive)"
@@ -61,6 +62,9 @@ build:
 
 eval:
 	$(PYTHON) -m scout --mode eval
+
+committee:
+	$(PYTHON) -m scout --mode committee
 
 scout:
 	$(PYTHON) -m scout --mode scout $(LIMIT_FLAG)

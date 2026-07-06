@@ -5,6 +5,7 @@ import io
 import sys
 
 from scout.commands import build as build_mod
+from scout.commands import committee as committee_mod
 from scout.commands import eval as eval_mod
 from scout.commands import library
 from scout.commands import reset_harvest
@@ -63,6 +64,30 @@ def cmd_eval(_args):
     log_event("eval", summary)
 
 
+def _print_committee_report(rows):
+    if not rows:
+        return
+    name_w = max(len("skill"), *(len(r["name"]) for r in rows))
+    decision_w = max(len("decision"), *(len(r["decision"]) for r in rows))
+    print("\nCommittee report:")
+    print(f"| {'skill':<{name_w}} | votes | score | {'decision':<{decision_w}} |")
+    print(f"|{'-' * (name_w + 2)}|-------|-------|{'-' * (decision_w + 2)}|")
+    for r in rows:
+        score = f"{r['score']:.2f}" if r["score"] is not None else "-"
+        print(f"| {r['name']:<{name_w}} | {r['votes']:>5} | {score:>5} "
+              f"| {r['decision']:<{decision_w}} |")
+    print()
+
+
+def cmd_committee(_args):
+    result = committee_mod.run()
+    _print_committee_report(result["report"])
+    summary = (f"committee: {result['hired']} hired, {result['rejected']} rejected, "
+               f"{result['no_quorum']} no-quorum, {result['collisions']} name-collisions")
+    print(summary)
+    log_event("committee", summary)
+
+
 def cmd_search(args):
     query = args.keyword_or_name
     matches = library.search(query)
@@ -115,8 +140,13 @@ def cmd_scout(args):
     build_result = build_mod.run(limit=args.limit)
     eval_result = eval_mod.run()
     _print_eval_report(eval_result["report"])
+    committee_result = committee_mod.run()
+    _print_committee_report(committee_result["report"])
     summary = (f"scout: harvested {harvest_result['new']}, built {build_result['drafted']}, "
-               f"evaluated {eval_result['passed']} passed / {eval_result['failed']} failed")
+               f"evaluated {eval_result['passed']} passed / {eval_result['failed']} failed, "
+               f"committee {committee_result['hired']} hired / {committee_result['rejected']} "
+               f"rejected / {committee_result['no_quorum']} no-quorum / "
+               f"{committee_result['collisions']} name-collisions")
     print(summary)
     log_event("scout", summary)
 
@@ -134,7 +164,8 @@ def main():
     )
     parser.add_argument(
         "--mode", required=True,
-        choices=["harvest", "build", "eval", "search", "show", "review", "scout", "reset-harvest"],
+        choices=["harvest", "build", "eval", "committee", "search", "show", "review", "scout",
+                 "reset-harvest"],
     )
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--github-only", action="store_true")
@@ -161,6 +192,7 @@ def main():
         "harvest": cmd_harvest,
         "build": cmd_build,
         "eval": cmd_eval,
+        "committee": cmd_committee,
         "review": cmd_review,
         "scout": cmd_scout,
         "reset-harvest": cmd_reset_harvest,

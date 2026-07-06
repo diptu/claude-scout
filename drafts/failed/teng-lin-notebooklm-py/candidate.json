@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "teng-lin/notebooklm-py",
+  "url": "https://github.com/teng-lin/notebooklm-py",
+  "description": "Unofficial Python API and agentic skill for Google NotebookLM. Full programmatic access to NotebookLM's features\u2014including capabilities the web UI doesn't expose\u2014via Python, CLI, and AI agents like Claude Code, Codex, and OpenClaw.",
+  "stars": 17262,
+  "discovered_at": "2026-07-06T18:29:09.842328+00:00"
+}

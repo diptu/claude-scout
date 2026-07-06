@@ -262,5 +262,13 @@
     "description": "\ud83c\udf0a The leading agent meta-harness. Deploy intelligent multi-player swarms, coordinate autonomous workflows, and build conversational AI systems. Features adaptive memory, self-learning intelligence, RAG integration, and native Claude Code / Codex / Hermes and many more Integrated",
     "stars": 63279,
     "discovered_at": "2026-07-06T18:44:29.310908+00:00"
+  },
+  {
+    "source": "github",
+    "name": "sudheerj/reactjs-interview-questions",
+    "url": "https://github.com/sudheerj/reactjs-interview-questions",
+    "description": "List of top 500 ReactJS Interview Questions & Answers....Coding exercise questions are coming soon!!",
+    "stars": 44665,
+    "discovered_at": "2026-07-06T19:32:40.964982+00:00"
   }
 ]

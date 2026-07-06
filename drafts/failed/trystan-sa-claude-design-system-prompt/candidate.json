@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "Trystan-SA/claude-design-system-prompt",
+  "url": "https://github.com/Trystan-SA/claude-design-system-prompt",
+  "description": "Reverse-engineered system prompt and skill library that turns an LLM into an opinionated, accessibility-aware, AI-slop-resistant design collaborator.",
+  "stars": 1229,
+  "discovered_at": "2026-07-06T18:21:50.719694+00:00"
+}

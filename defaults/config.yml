@@ -11,9 +11,11 @@ github:
   # Search terms matched against repo name and description.
   keywords:
     - UI-UX
-    - claude skill
-    - claude code agent
-    - mcp server
+    - data-architect
+    - Reactjs
+    # - claude skill
+    # - claude code agent
+    # - mcp server
 
 reddit:
   # Minimum post score (upvotes) for a post to become a candidate.
@@ -25,11 +27,38 @@ reddit:
   # Subreddits scanned by the harvester.
   subreddits:
     - UI-UX
-    - ClaudeAI
-    - LocalLLaMA
-    - Anthropic
+    - data-architect
+    - Reactjs
+    # - ClaudeAI
+    # - LocalLLaMA
+    # - Anthropic
   # A post qualifies only if its title/body mentions one of these keywords.
   keywords:
-    - claude skill
-    - claude code agent
-    - mcp server
+    - UI-UX
+    - data-architect
+    - Reactjs
+    # - claude skill
+    # - claude code agent
+    # - mcp server
+
+# Hiring-committee gate: after a draft passes eval, each voter below scores it
+# 1-5 on usefulness/uniqueness/quality/safety (see prompts/committee.md). The
+# overall average across all voters and dimensions decides library/ vs trash/.
+committee:
+  # Overall average (1-5) a candidate needs to be auto-promoted to library/.
+  passing_score: 3.5
+  # Minimum number of voters that must successfully return a score before a
+  # verdict is reached at all; below this the draft is left alone for
+  # `make review` instead of being auto-decided on partial data.
+  min_voters: 5
+  voters:
+    - name: CEO
+      focus: Strategic value and ROI of adding and maintaining this skill.
+    - name: CTO
+      focus: Technical correctness and long-term maintainability of the instructions.
+    - name: Solution Architect
+      focus: Uniqueness versus the existing library catalog; overlap/redundancy with what's already there.
+    - name: Security Lead
+      focus: Safety — free of destructive actions, prompt-injection risk, or unsafe credential handling.
+    - name: QA Lead
+      focus: Clarity and testability of the steps — would a reviewer know if it worked?
