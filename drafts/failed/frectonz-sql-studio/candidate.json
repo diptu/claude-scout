@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "frectonz/sql-studio",
+  "url": "https://github.com/frectonz/sql-studio",
+  "description": "SQL Database Explorer [SQLite, libSQL, PostgreSQL, MySQL/MariaDB, ClickHouse, DuckDB, Microsoft SQL Server]",
+  "stars": 3571,
+  "discovered_at": "2026-07-09T14:39:15.765301+00:00"
+}

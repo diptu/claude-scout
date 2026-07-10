@@ -1,1 +1,0 @@
-This SKILL.md already exists at `.claude/skills/onvoyage-ai-gtm-engineer-skills/SKILL.md` and looks complete and well-formed per the requirements. No changes needed — the file matches the candidate's description (AEO/GEO auditing skill) and satisfies all constraints (frontmatter with exactly `name`/`description`, self-contained guidance, no auto-executing code, no placeholders).

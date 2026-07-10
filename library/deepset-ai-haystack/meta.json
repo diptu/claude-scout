@@ -1,0 +1,9 @@
+{
+  "name": "deepset-ai-haystack",
+  "tags": [
+    "LLM Pipeline Architect"
+  ],
+  "source_url": "https://github.com/deepset-ai/haystack",
+  "date_added": "2026-07-10",
+  "eval_status": "passed"
+}

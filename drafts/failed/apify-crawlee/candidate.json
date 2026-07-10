@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "apify/crawlee",
+  "url": "https://github.com/apify/crawlee",
+  "description": "Crawlee\u2014A web scraping and browser automation library for Node.js to build reliable crawlers. In JavaScript and TypeScript. Extract data for AI, LLMs, RAG, or GPTs. Download HTML, PDF, JPG, PNG, and other files from websites. Works with Puppeteer, Playwright, Cheerio, JSDOM, and raw HTTP. Both headful and headless mode. With proxy rotation.",
+  "stars": 24617,
+  "discovered_at": "2026-07-09T14:42:17.438323+00:00"
+}

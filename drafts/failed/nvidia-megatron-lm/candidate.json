@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "NVIDIA/Megatron-LM",
+  "url": "https://github.com/NVIDIA/Megatron-LM",
+  "description": "Ongoing research training transformer models at scale",
+  "stars": 16996,
+  "discovered_at": "2026-07-08T13:04:22.289527+00:00"
+}

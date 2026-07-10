@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "CrunchyData/postgres-operator",
+  "url": "https://github.com/CrunchyData/postgres-operator",
+  "description": "Production PostgreSQL for Kubernetes, from high availability Postgres clusters to full-scale database-as-a-service.",
+  "stars": 4429,
+  "discovered_at": "2026-07-09T14:39:15.765282+00:00"
+}

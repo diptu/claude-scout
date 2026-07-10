@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "headroomlabs-ai/headroom",
+  "url": "https://github.com/headroomlabs-ai/headroom",
+  "description": "Compress tool outputs, logs, files, and RAG chunks before they reach the LLM. 60-95% fewer tokens, same answers. Library, proxy, MCP server.",
+  "stars": 58087,
+  "discovered_at": "2026-07-09T14:42:17.438316+00:00"
+}

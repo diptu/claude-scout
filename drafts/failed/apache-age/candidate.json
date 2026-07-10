@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "apache/age",
+  "url": "https://github.com/apache/age",
+  "description": "Graph database optimized for fast analysis and real-time data processing. It is provided as an extension to PostgreSQL.",
+  "stars": 4656,
+  "discovered_at": "2026-07-09T14:39:15.765279+00:00"
+}

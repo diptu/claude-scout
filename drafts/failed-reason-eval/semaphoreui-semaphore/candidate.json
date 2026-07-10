@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "semaphoreui/semaphore",
+  "url": "https://github.com/semaphoreui/semaphore",
+  "description": "Modern UI and powerful API for Ansible, Terraform/OpenTofu/Terragrunt, PowerShell and other DevOps tools.",
+  "stars": 13852,
+  "discovered_at": "2026-07-08T13:00:05.461100+00:00"
+}

@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "aws-samples/aws-security-reference-architecture-examples",
+  "url": "https://github.com/aws-samples/aws-security-reference-architecture-examples",
+  "description": "Example solutions demonstrating how to implement patterns within the AWS Security Reference Architecture guide using CloudFormation (including Customizations for AWS Control Tower) and Terraform.",
+  "stars": 1136,
+  "discovered_at": "2026-07-09T14:43:16.220221+00:00"
+}

@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "MagicStack/asyncpg",
+  "url": "https://github.com/MagicStack/asyncpg",
+  "description": "A fast PostgreSQL Database Client Library for Python/asyncio.",
+  "stars": 8053,
+  "discovered_at": "2026-07-09T14:39:15.765268+00:00"
+}

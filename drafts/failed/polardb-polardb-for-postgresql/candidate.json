@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "polardb/PolarDB-for-PostgreSQL",
+  "url": "https://github.com/polardb/PolarDB-for-PostgreSQL",
+  "description": "A cloud-native database based on PostgreSQL developed by Alibaba Cloud.",
+  "stars": 3180,
+  "discovered_at": "2026-07-09T14:39:15.765303+00:00"
+}

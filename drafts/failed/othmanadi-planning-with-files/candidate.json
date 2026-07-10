@@ -3,6 +3,6 @@
   "name": "OthmanAdi/planning-with-files",
   "url": "https://github.com/OthmanAdi/planning-with-files",
   "description": "Persistent file-based planning for AI coding agents and long-running agentic tasks. Crash-proof markdown plans that survive context loss and /clear, plus a deterministic completion gate and multi-agent shared state on disk. Manus-style. Works with Claude Code, Codex CLI, Cursor, Kiro, OpenCode and 60+ agents via the SKILL.md standard.",
-  "stars": 24910,
-  "discovered_at": "2026-07-06T18:29:09.842285+00:00"
+  "stars": 25043,
+  "discovered_at": "2026-07-08T13:05:53.694308+00:00"
 }

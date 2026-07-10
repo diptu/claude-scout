@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "karpathy/autoresearch",
+  "url": "https://github.com/karpathy/autoresearch",
+  "description": "AI agents running research on single-GPU nanochat training automatically",
+  "stars": 90349,
+  "discovered_at": "2026-07-08T13:04:22.289363+00:00"
+}

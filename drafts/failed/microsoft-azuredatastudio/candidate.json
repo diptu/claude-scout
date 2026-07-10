@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "microsoft/azuredatastudio",
+  "url": "https://github.com/microsoft/azuredatastudio",
+  "description": "Azure Data Studio is a data management and development tool with connectivity to popular cloud and on-premises databases. Azure Data Studio supports Windows, macOS, and Linux, with immediate capability to connect to Azure SQL and SQL Server. Browse the extension library for more database support options including MySQL, PostgreSQL, and MongoDB.",
+  "stars": 7694,
+  "discovered_at": "2026-07-09T14:39:15.765270+00:00"
+}

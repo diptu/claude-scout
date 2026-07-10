@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "OpenAPITools/openapi-generator",
+  "url": "https://github.com/OpenAPITools/openapi-generator",
+  "description": "OpenAPI Generator allows generation of API client libraries (SDK generation), server stubs, documentation and configuration automatically given an OpenAPI Spec (v2, v3)",
+  "stars": 26487,
+  "discovered_at": "2026-07-08T13:00:07.239214+00:00"
+}

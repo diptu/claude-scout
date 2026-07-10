@@ -45,43 +45,88 @@ def _canned_claude(stdouts):
     return fake_run
 
 
+def _fake_council(decision="add", reason="worth it"):
+    def fake_evaluate(_skill_md, _library_names):
+        return {"decision": decision, "reason": reason, "advisors": [], "log_lines": ["x"]}
+    return fake_evaluate
+
+
+def _unreachable_council(monkeypatch):
+    def fail_evaluate(*_a, **_k):
+        raise AssertionError("council.evaluate should not be called")
+    monkeypatch.setattr(committee.council, "evaluate", fail_evaluate)
+
+
 def test_nothing_to_do(tmp_path, monkeypatch):
     _patch_dirs(monkeypatch, tmp_path, tmp_path / "drafts")
     result = committee.run()
-    assert result == {"hired": 0, "rejected": 0, "no_quorum": 0, "collisions": 0, "report": []}
+    assert result == {"pending_review": 0, "rejected": 0, "duplicate": 0, "no_quorum": 0,
+                       "collisions": 0, "already_decided": 0, "report": []}
 
 
-def test_high_scores_promote_to_library(tmp_path, monkeypatch):
+def test_hired_and_council_approves_leaves_for_review(tmp_path, monkeypatch):
     drafts_dir = tmp_path / "drafts"
     _make_draft(drafts_dir, "good-skill")
     _patch_dirs(monkeypatch, tmp_path, drafts_dir)
     monkeypatch.setattr(committee.subprocess, "run",
                          _canned_claude([_vote_json(5, 5, 5, 5)] * 3))
+    monkeypatch.setattr(committee.council, "evaluate", _fake_council("add", "genuinely new"))
 
     result = committee.run()
 
-    assert result["hired"] == 1
+    assert result["pending_review"] == 1
     assert result["rejected"] == 0
-    assert result["report"][0]["decision"] == "hired"
-    library_dir = tmp_path / "library" / "good-skill"
-    assert (library_dir / "SKILL.md").exists()
-    meta = json.loads((library_dir / "meta.json").read_text())
-    assert meta["committee_decision"] == "hired"
-    assert meta["committee_score"] == 5.0
-    assert not drafts_dir.joinpath("good-skill").exists()
+    assert result["duplicate"] == 0
+    assert result["report"][0]["decision"] == "pending-review"
+    # never auto-promoted: draft stays in drafts/ for `make review`
+    draft_dir = drafts_dir / "good-skill"
+    assert draft_dir.joinpath("SKILL.md").exists()
+    assert not (tmp_path / "library" / "good-skill").exists()
+    committee_verdict = json.loads(draft_dir.joinpath("committee_verdict.json").read_text())
+    assert committee_verdict["decision"] == "hired"
+    assert committee_verdict["overall_score"] == 5.0
+    council_verdict = json.loads(draft_dir.joinpath("council_verdict.json").read_text())
+    assert council_verdict["decision"] == "add"
+    assert council_verdict["reason"] == "genuinely new"
 
 
-def test_low_scores_reject_to_trash(tmp_path, monkeypatch):
+def test_hired_but_council_flags_duplicate_trashes(tmp_path, monkeypatch):
+    drafts_dir = tmp_path / "drafts"
+    _make_draft(drafts_dir, "dupey-skill")
+    _patch_dirs(monkeypatch, tmp_path, drafts_dir)
+    monkeypatch.setattr(committee.subprocess, "run",
+                         _canned_claude([_vote_json(5, 5, 5, 5)] * 3))
+    monkeypatch.setattr(committee.council, "evaluate", _fake_council("skip", "redundant"))
+
+    result = committee.run()
+
+    assert result["pending_review"] == 0
+    assert result["duplicate"] == 1
+    assert result["report"][0]["decision"] == "duplicate"
+    assert not (drafts_dir / "dupey-skill").exists()
+    assert not (tmp_path / "library" / "dupey-skill").exists()
+    trash_dir = tmp_path / "trash" / "dupey-skill"
+    assert trash_dir.joinpath("SKILL.md").exists()
+    committee_verdict = json.loads(trash_dir.joinpath("committee_verdict.json").read_text())
+    assert committee_verdict["decision"] == "hired"
+    council_verdict = json.loads(trash_dir.joinpath("council_verdict.json").read_text())
+    assert council_verdict["decision"] == "skip"
+    assert council_verdict["reason"] == "redundant"
+
+
+def test_low_scores_reject_to_trash_without_calling_council(tmp_path, monkeypatch):
     drafts_dir = tmp_path / "drafts"
     _make_draft(drafts_dir, "bad-skill")
     _patch_dirs(monkeypatch, tmp_path, drafts_dir)
     monkeypatch.setattr(committee.subprocess, "run",
                          _canned_claude([_vote_json(1, 1, 1, 1)] * 3))
+    _unreachable_council(monkeypatch)
 
     result = committee.run()
 
-    assert result["hired"] == 0
+    assert result["pending_review"] == 0
     assert result["rejected"] == 1
+    assert result["duplicate"] == 0
     assert result["report"][0]["decision"] == "rejected"
     assert (tmp_path / "trash" / "bad-skill" / "SKILL.md").exists()
     assert not (tmp_path / "library" / "bad-skill").exists()
@@ -95,6 +140,7 @@ def test_name_collision_with_existing_library_entry_is_never_overwritten(tmp_pat
     existing_lib.mkdir(parents=True)
     (existing_lib / "SKILL.md").write_text("curated content")
     (existing_lib / "meta.json").write_text('{"name": "dup-skill", "tags": ["hand-curated"]}')
+    _unreachable_council(monkeypatch)
 
     calls = []
     monkeypatch.setattr(committee.subprocess, "run", lambda *a, **k: calls.append(1))
@@ -102,7 +148,7 @@ def test_name_collision_with_existing_library_entry_is_never_overwritten(tmp_pat
     result = committee.run()
 
     assert calls == []  # no claude calls spent on a candidate that can't be auto-decided
-    assert result["hired"] == 0
+    assert result["pending_review"] == 0
     assert result["rejected"] == 0
     assert result["collisions"] == 1
     assert result["report"][0]["decision"] == "name-collision"
@@ -117,16 +163,40 @@ def test_below_quorum_leaves_draft_in_place(tmp_path, monkeypatch):
     drafts_dir = tmp_path / "drafts"
     _make_draft(drafts_dir, "unsure-skill")
     _patch_dirs(monkeypatch, tmp_path, drafts_dir)
+    _unreachable_council(monkeypatch)
     # only 1 of 3 voters returns a parseable vote
     monkeypatch.setattr(committee.subprocess, "run",
                          _canned_claude([_vote_json(), "not json at all", "still not json"]))
 
     result = committee.run()
 
-    assert result["hired"] == 0
+    assert result["pending_review"] == 0
     assert result["rejected"] == 0
     assert result["no_quorum"] == 1
     assert result["report"][0]["decision"] == "no-quorum"
     assert (drafts_dir / "unsure-skill" / "SKILL.md").exists()
     assert not (tmp_path / "library" / "unsure-skill").exists()
     assert not (tmp_path / "trash" / "unsure-skill").exists()
+
+
+def test_already_decided_draft_is_skipped(tmp_path, monkeypatch):
+    drafts_dir = tmp_path / "drafts"
+    draft_dir = _make_draft(drafts_dir, "pending-skill")
+    (draft_dir / "committee_verdict.json").write_text(
+        json.dumps({"overall_score": 5.0, "decision": "hired"})
+    )
+    (draft_dir / "council_verdict.json").write_text(
+        json.dumps({"decision": "add", "reason": "ok"})
+    )
+    _patch_dirs(monkeypatch, tmp_path, drafts_dir)
+    _unreachable_council(monkeypatch)
+
+    calls = []
+    monkeypatch.setattr(committee.subprocess, "run", lambda *a, **k: calls.append(1))
+
+    result = committee.run()
+
+    assert calls == []  # no re-voting on an already-decided draft
+    assert result["already_decided"] == 1
+    assert result["report"][0]["decision"] == "already-decided"
+    assert draft_dir.joinpath("SKILL.md").exists()

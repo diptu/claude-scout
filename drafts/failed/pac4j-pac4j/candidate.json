@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "pac4j/pac4j",
+  "url": "https://github.com/pac4j/pac4j",
+  "description": "Security engine for Java (authentication, authorization, multi frameworks): OpenID Connect, SAML2, CAS, OAuth, LDAP, JWT...",
+  "stars": 2521,
+  "discovered_at": "2026-07-09T14:55:26.909295+00:00"
+}

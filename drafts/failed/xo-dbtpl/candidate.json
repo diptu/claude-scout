@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "xo/dbtpl",
+  "url": "https://github.com/xo/dbtpl",
+  "description": "Command line tool to generate idiomatic Go code for SQL databases supporting PostgreSQL, MySQL, SQLite, Oracle, and Microsoft SQL Server",
+  "stars": 3893,
+  "discovered_at": "2026-07-09T14:39:15.765290+00:00"
+}

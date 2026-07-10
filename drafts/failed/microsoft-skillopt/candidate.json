@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "microsoft/SkillOpt",
+  "url": "https://github.com/microsoft/SkillOpt",
+  "description": "SkillOpt is a text-space optimizer that trains reusable natural-language skills for frozen LLM agents through trajectory-driven edits, validation-gated updates, and deployable best_skill.md artifacts.",
+  "stars": 11870,
+  "discovered_at": "2026-07-09T14:42:14.800966+00:00"
+}

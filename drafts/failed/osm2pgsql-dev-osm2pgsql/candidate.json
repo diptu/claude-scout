@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "osm2pgsql-dev/osm2pgsql",
+  "url": "https://github.com/osm2pgsql-dev/osm2pgsql",
+  "description": "Import OpenStreetMap data into a PostgreSQL/PostGIS database",
+  "stars": 1673,
+  "discovered_at": "2026-07-09T14:39:15.765326+00:00"
+}

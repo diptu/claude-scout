@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "jasync-sql/jasync-sql",
+  "url": "https://github.com/jasync-sql/jasync-sql",
+  "description": "Java & Kotlin Async DataBase Driver for MySQL and PostgreSQL written in Kotlin",
+  "stars": 1690,
+  "discovered_at": "2026-07-09T14:39:15.765324+00:00"
+}

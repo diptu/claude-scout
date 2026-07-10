@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "SmartFlowAI/EmoLLM",
+  "url": "https://github.com/SmartFlowAI/EmoLLM",
+  "description": "\u5fc3\u7406\u5065\u5eb7\u5927\u6a21\u578b (LLM x Mental Health), Pre & Post-training & Dataset & Evaluation & Depoly & RAG,  with InternLM / Qwen / Baichuan / DeepSeek / Mixtral / LLama / GLM series models",
+  "stars": 1759,
+  "discovered_at": "2026-07-09T14:42:17.438382+00:00"
+}

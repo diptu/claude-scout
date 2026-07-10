@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "GaiZhenbiao/ChuanhuChatGPT",
+  "url": "https://github.com/GaiZhenbiao/ChuanhuChatGPT",
+  "description": "GUI for ChatGPT API and many LLMs. Supports agents, file-based QA, GPT finetuning and query with web search. All with a neat UI.",
+  "stars": 15305,
+  "discovered_at": "2026-07-09T14:42:14.800938+00:00"
+}

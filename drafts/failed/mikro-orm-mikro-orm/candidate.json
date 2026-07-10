@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "mikro-orm/mikro-orm",
+  "url": "https://github.com/mikro-orm/mikro-orm",
+  "description": "TypeScript ORM for Node.js based on Data Mapper, Unit of Work and Identity Map patterns. Supports MongoDB, MySQL, MariaDB, MS SQL Server, PostgreSQL and SQLite/libSQL databases.",
+  "stars": 9112,
+  "discovered_at": "2026-07-09T14:39:15.765263+00:00"
+}

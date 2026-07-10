@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "openlit/openlit",
+  "url": "https://github.com/openlit/openlit",
+  "description": "Open source platform for AI Engineering: OpenTelemetry-native LLM Observability, GPU Monitoring, Guardrails, Evaluations, Prompt Management, Vault, Playground. \ud83d\ude80\ud83d\udcbb Integrates with 50+ LLM Providers, VectorDBs, Agent Frameworks and GPUs.",
+  "stars": 2582,
+  "discovered_at": "2026-07-09T14:42:15.752565+00:00"
+}

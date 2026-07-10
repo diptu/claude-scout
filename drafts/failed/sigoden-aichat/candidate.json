@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "sigoden/aichat",
+  "url": "https://github.com/sigoden/aichat",
+  "description": "All-in-one LLM CLI tool featuring Shell Assistant, Chat-REPL, RAG, AI Tools & Agents, with access to OpenAI, Claude, Gemini, Ollama, Groq, and more.",
+  "stars": 10221,
+  "discovered_at": "2026-07-09T14:42:17.438335+00:00"
+}

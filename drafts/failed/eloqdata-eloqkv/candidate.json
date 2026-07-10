@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "eloqdata/eloqkv",
+  "url": "https://github.com/eloqdata/eloqkv",
+  "description": "High Performance Redis-API Compatible Distributed Database with Persistency, Scalability, Full ACID Transactions, and Tiered S3 Storage Cost Efficiency  ",
+  "stars": 1491,
+  "discovered_at": "2026-07-09T14:40:11.088582+00:00"
+}

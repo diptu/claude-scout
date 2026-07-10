@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "abpframework/abp",
+  "url": "https://github.com/abpframework/abp",
+  "description": "Open-source web application framework for ASP.NET Core! Offers an opinionated architecture to build enterprise software solutions with best practices on top of the .NET. Provides the fundamental infrastructure, cross-cutting-concern implementations, startup templates, application modules, UI themes, tooling and documentation.",
+  "stars": 14348,
+  "discovered_at": "2026-07-08T13:00:07.239255+00:00"
+}

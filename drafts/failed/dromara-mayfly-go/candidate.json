@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "dromara/mayfly-go",
+  "url": "https://github.com/dromara/mayfly-go",
+  "description": "Browser-based management platform of machine, database (mysql pgsql oracle sqlserver Gauss sqlite), redis(standalone sentinel cluster), mongo, Es unified management and operation platform. (web\u7248linux(\u7ec8\u7aef \u6587\u4ef6 \u811a\u672c \u8fdb\u7a0b)\u3001\u6570\u636e\u5e93(mysql pgsql oracle sqlserver \u9ad8\u65af \u8fbe\u68a6 sqlite)\u3001\u6570\u636e\u540c\u6b65\u3001redis(\u5355\u673a \u54e8\u5175 \u96c6\u7fa4)\u3001mongo\u3001Es\u7edf\u4e00\u7ba1\u7406\u64cd\u4f5c\u5e73\u53f0)",
+  "stars": 2350,
+  "discovered_at": "2026-07-09T14:40:11.088573+00:00"
+}

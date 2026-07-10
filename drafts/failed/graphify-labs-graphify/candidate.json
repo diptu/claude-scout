@@ -1,8 +1,0 @@
-{
-  "source": "github",
-  "name": "Graphify-Labs/graphify",
-  "url": "https://github.com/Graphify-Labs/graphify",
-  "description": "AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Turn any folder of code, SQL schemas, R scripts, shell scripts, docs, papers, images, or videos into a queryable knowledge graph. App code + database schema + infrastructure in one graph.",
-  "stars": 78593,
-  "discovered_at": "2026-07-06T18:29:04.318040+00:00"
-}

@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "jupyter/jupyter",
+  "url": "https://github.com/jupyter/jupyter",
+  "description": "Jupyter metapackage for installation and documentation",
+  "stars": 15331,
+  "discovered_at": "2026-07-08T13:00:07.239248+00:00"
+}

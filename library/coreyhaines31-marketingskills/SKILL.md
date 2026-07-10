@@ -1,126 +1,57 @@
 ---
-name: marketing-cro-copywriting
-description: Guides Claude through conversion rate optimization, copywriting, SEO, and growth analytics work — use when asked to improve a landing page, audit funnel conversion, write or rewrite marketing copy, plan an SEO content strategy, or diagnose a growth/analytics problem.
+name: marketing-strategist
+description: Guides copywriting, conversion rate optimization, SEO, analytics interpretation, and growth engineering tasks; use when asked to write marketing copy, review a landing page for conversion issues, plan SEO content, interpret marketing/analytics data, or design growth experiments.
 ---
 
-# Marketing: CRO, Copywriting, SEO & Growth Analytics
+# Marketing Strategist
 
-This skill helps with marketing engineering tasks that mix persuasion writing
-with data-driven optimization: improving how a page or funnel converts,
-writing copy that matches audience intent, planning organic search growth,
-and reading analytics to find what's actually broken.
+This skill helps with marketing work that spans conversion rate optimization (CRO), copywriting, SEO, analytics interpretation, and growth engineering. Apply it whenever a request touches landing pages, ad copy, email campaigns, onboarding flows, search visibility, funnel metrics, or experiment design — not just when the word "marketing" appears explicitly.
 
 ## When to apply this skill
 
-Apply this skill when the user asks Claude to:
+- The user asks to write or improve copy: headlines, landing pages, emails, ads, product descriptions, onboarding microcopy.
+- The user asks to review a page, flow, or campaign for why it isn't converting.
+- The user asks for SEO help: keyword strategy, content structure, on-page optimization, technical SEO issues.
+- The user shares analytics data (funnel numbers, traffic reports, A/B test results) and wants it interpreted.
+- The user wants to design or prioritize growth experiments (acquisition, activation, retention, referral, revenue).
 
-- Review or rewrite landing page, email, ad, or product copy
-- Diagnose why a page, signup flow, or checkout isn't converting
-- Plan or audit an SEO content strategy (keywords, structure, internal linking)
-- Interpret analytics data (funnel drop-off, traffic sources, cohort retention)
-  to recommend a growth action
-- Design or evaluate an A/B test for a marketing page or flow
+## Copywriting
 
-Do not apply this skill for pure brand/creative direction (logos, visual
-identity) or for paid media buying strategy — those are adjacent but distinct
-disciplines this skill does not cover.
+1. Identify the single audience and the single action the copy should drive. Copy that tries to speak to everyone or push multiple actions converts worse than narrow, specific copy.
+2. Lead with the reader's problem or desired outcome, not the product's features. Translate every feature into a concrete benefit ("saves 3 hours a week" beats "automated scheduling").
+3. Match the copy's reading level and tone to the audience — technical buyers tolerate jargon and specificity; consumer audiences need plain language and short sentences.
+4. Front-load the strongest claim or hook in the first line; assume most readers only see the first sentence or headline.
+5. Cut any sentence that could apply to a competitor's product unchanged — it's not differentiated enough to keep.
+6. End with one clear call to action, stated as a specific next step ("Start your free trial" not "Learn more") rather than a vague closer.
 
-## Step-by-step guidance
+## Conversion rate optimization (CRO)
 
-### 1. Establish the funnel stage and goal first
+1. Before proposing changes, ask what the page's single primary goal is (signup, purchase, demo request). Optimizing for a goal the page wasn't designed around produces incoherent advice.
+2. Walk the flow in order: attention (does the headline match what drove the visitor here), clarity (can a new visitor tell what this is in 5 seconds), friction (how many fields/clicks/decisions stand between interest and conversion), and trust (social proof, security signals, pricing transparency).
+3. Prioritize CRO recommendations by expected impact vs. effort — removing a form field or clarifying a headline usually beats a full redesign.
+4. When reviewing test results, check for statistical validity (sample size, test duration covering a full weekly cycle) before declaring a winner. Flag underpowered tests instead of endorsing their conclusion.
+5. Recommend one change at a time when possible so causality stays clear; bundling multiple changes into one test makes it impossible to know what worked.
 
-Before touching copy or design, identify which stage of the funnel is in
-scope: awareness (SEO/content), acquisition (ads/landing page), activation
-(signup/onboarding), or retention (email/lifecycle). CRO and copy fixes that
-work at one stage often hurt another — e.g., aggressive urgency copy helps
-acquisition conversion but can raise refund/churn rates if it overpromises.
-State the goal metric explicitly (signup rate, checkout completion, organic
-sessions) before recommending changes.
+## SEO
 
-### 2. Copywriting reviews and rewrites
+1. Start from search intent, not just keyword volume: classify whether a query is informational, navigational, transactional, or commercial-investigation, and match content format to that intent.
+2. Structure content around one primary keyword/topic per page with clear heading hierarchy (H1 for the page topic, H2s for subtopics) rather than keyword-stuffing a single page for many unrelated terms.
+3. Check for technical basics before content strategy: is the page indexable, does it have a unique title/meta description, is there a clear internal linking path to it from higher-authority pages.
+4. Favor genuinely useful, specific content over generic filler — thin content that only exists to rank tends to rank poorly and converts worse even when it does rank.
+5. For existing content, prioritize updating and consolidating outdated or overlapping pages over always creating new ones — duplicate/competing pages split ranking signal.
 
-When asked to write or improve copy:
+## Analytics interpretation
 
-- Identify the single primary action the copy should drive (one CTA, not
-  several competing ones).
-- Match the copy's certainty and specificity to the buyer's stage: cold
-  traffic needs problem-first framing, warm/returning traffic can go
-  feature/benefit-first.
-- Lead with the concrete outcome the reader gets, not the mechanism — cut
-  vague adjectives ("powerful", "seamless", "next-generation") in favor of
-  specific claims and numbers where they exist.
-- Keep sentence and paragraph length short for scannability; use subheads
-  that each carry a complete claim on their own (a skimmer reading only
-  headlines should still get the pitch).
-- Preserve any legally load-bearing claims (pricing, guarantees, compliance
-  language) exactly — flag them for the user's confirmation rather than
-  paraphrasing.
-- Provide 2-3 variants when the ask is open-ended, each testing a distinct
-  angle (e.g., pain-led vs. outcome-led vs. social-proof-led), rather than
-  minor wording tweaks of the same angle.
+1. Establish the funnel stage being measured (acquisition, activation, retention, referral, revenue) before interpreting a metric in isolation — a rising traffic number with flat signups is a different problem than falling traffic.
+2. Distinguish correlation from causation explicitly: a metric moving alongside a change isn't proof the change caused it, especially without a control group or before/after seasonality check.
+3. Look for confounders (seasonality, traffic source mix shifts, tracking changes) before recommending action based on a metric swing.
+4. Translate raw numbers into the business question being asked ("is this channel worth the spend," "is onboarding losing people") rather than reporting numbers without a conclusion.
+5. When data is incomplete or noisy, say so plainly and recommend what additional data or time window would resolve the ambiguity, rather than forcing a confident conclusion from thin data.
 
-### 3. Conversion rate optimization (CRO)
+## Growth engineering
 
-When asked to improve conversion on a page or flow:
-
-- Ask for or infer the current funnel numbers (traffic, conversion rate,
-  drop-off points) before prescribing fixes — don't guess at what's broken
-  without data if data is available.
-- Work top-down through friction points: does the page match the traffic
-  source's intent (message match)? Is the value proposition clear above the
-  fold? Is there one clear next action? Are trust signals (reviews, security
-  badges, guarantees) present near the decision point? Is the form/checkout
-  asking for more than the minimum needed at this stage?
-- Prioritize fixes by estimated impact × ease, and say so explicitly — don't
-  hand back an undifferentiated checklist.
-- Frame every recommendation as a testable hypothesis: "if we do X, we expect
-  metric Y to move because Z" — this makes the suggestion falsifiable and
-  sets up the next step (a test) rather than a one-off opinion.
-
-### 4. SEO strategy
-
-When asked to plan or audit SEO:
-
-- Start from search intent, not keyword volume: group target queries by
-  informational vs. transactional intent, and match content type to intent
-  (a comparison page for "X vs Y", a how-to for "how to do X").
-- Check for one clear primary keyword/topic per page — competing pages
-  targeting the same intent cannot both rank and will cannibalize each other.
-- Recommend internal linking from high-authority existing pages to new or
-  weaker pages targeting related terms.
-- For technical SEO questions (indexing, crawl budget, canonicalization),
-  be explicit about what's a content problem vs. a technical/crawlability
-  problem — they require different fixes.
-- Treat SEO as a lagging-indicator channel: set expectations that changes
-  take weeks to months to show in rankings/traffic, unlike CRO changes which
-  can be measured in days.
-
-### 5. Analytics and growth diagnosis
-
-When asked to interpret data or diagnose a growth problem:
-
-- Locate the largest drop-off or anomaly first (biggest percentage-point
-  loss between adjacent funnel steps, biggest week-over-week change) rather
-  than reviewing every metric with equal weight.
-- Distinguish volume problems (not enough traffic/leads) from conversion
-  problems (enough traffic, but it doesn't convert) — the fixes for each are
-  different (acquisition/SEO vs. CRO/copy) and shouldn't be conflated.
-- Check for segment effects before concluding a metric moved overall — a
-  blended conversion rate can move because traffic mix shifted (e.g., more
-  low-intent paid traffic), not because the page got worse.
-- When proposing an A/B test to validate a fix, specify: the hypothesis, the
-  primary metric, a rough sample-size/duration expectation, and what would
-  count as a clear enough result to ship — avoid recommending tests that
-  can't realistically reach significance given the traffic described.
-
-### 6. General output discipline
-
-- Always tie a recommendation back to the stated goal metric — if the user
-  hasn't stated one, ask or state the assumption explicitly rather than
-  silently picking one.
-- Keep recommendations concrete and actionable (specific copy, specific page
-  section, specific metric) rather than generic marketing advice ("build
-  trust", "optimize for conversions").
-- When trade-offs exist between funnel stages (e.g., urgency copy boosts
-  short-term conversion but may hurt retention), state the trade-off rather
-  than optimizing one stage silently at the expense of another.
+1. Frame growth experiments around the AARRR funnel (Acquisition, Activation, Retention, Referral, Revenue) and identify which stage has the biggest current leak before designing an experiment — fixing acquisition when retention is broken wastes the new users being acquired.
+2. Write experiments as falsifiable hypotheses: "If we change X, then metric Y will move because Z" — vague experiments produce unusable results.
+3. Size experiments to the traffic/data available; recommend qualitative research (user interviews, session recordings) instead of an underpowered quantitative test when volume is too low to reach significance in a reasonable time.
+4. Prioritize experiment ideas by expected impact, confidence, and ease (effort) rather than working on whatever is most interesting to build.
+5. Treat instrumentation as a prerequisite: if the event or metric needed to judge an experiment isn't already tracked, flag that as blocking work before the experiment itself.

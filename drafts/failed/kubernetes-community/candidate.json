@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "kubernetes/community",
+  "url": "https://github.com/kubernetes/community",
+  "description": "Kubernetes Community Documentation",
+  "stars": 12926,
+  "discovered_at": "2026-07-08T13:00:07.239266+00:00"
+}

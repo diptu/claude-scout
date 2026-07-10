@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "OSU-NLP-Group/HippoRAG",
+  "url": "https://github.com/OSU-NLP-Group/HippoRAG",
+  "description": "[NeurIPS'24] HippoRAG is a novel RAG framework inspired by human long-term memory that enables LLMs to continuously integrate knowledge across external documents. RAG + Knowledge Graphs + Personalized PageRank.",
+  "stars": 3841,
+  "discovered_at": "2026-07-09T14:42:17.438366+00:00"
+}

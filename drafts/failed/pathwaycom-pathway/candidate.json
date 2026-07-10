@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "pathwaycom/pathway",
+  "url": "https://github.com/pathwaycom/pathway",
+  "description": "Python ETL framework for stream processing, real-time analytics, LLM pipelines, and RAG.",
+  "stars": 62702,
+  "discovered_at": "2026-07-09T14:42:17.438302+00:00"
+}

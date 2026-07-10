@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "arendst/Tasmota",
+  "url": "https://github.com/arendst/Tasmota",
+  "description": "Alternative firmware for ESP8266 and ESP32 based devices with easy configuration using webUI, OTA updates, automation using timers or rules, expandability and entirely local control over MQTT, HTTP, Serial or KNX. Full documentation at",
+  "stars": 24541,
+  "discovered_at": "2026-07-08T13:00:07.239221+00:00"
+}

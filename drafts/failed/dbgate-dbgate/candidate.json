@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "dbgate/dbgate",
+  "url": "https://github.com/dbgate/dbgate",
+  "description": "Database manager for MySQL, PostgreSQL, SQL Server, MongoDB, SQLite and others. Runs under Windows, Linux, Mac or as web application",
+  "stars": 7132,
+  "discovered_at": "2026-07-09T14:39:15.765274+00:00"
+}

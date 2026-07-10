@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "kurrent-io/KurrentDB",
+  "url": "https://github.com/kurrent-io/KurrentDB",
+  "description": "KurrentDB is a database that's engineered for modern software applications and event-driven architectures. Its event-native design simplifies data modeling and preserves data integrity while the integrated streaming engine solves distributed messaging challenges and ensures data consistency.",
+  "stars": 5816,
+  "discovered_at": "2026-07-09T14:39:14.196058+00:00"
+}

@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "lumina-ai-inc/chunkr",
+  "url": "https://github.com/lumina-ai-inc/chunkr",
+  "description": "Vision infrastructure to turn complex documents into RAG/LLM-ready data",
+  "stars": 4012,
+  "discovered_at": "2026-07-09T14:42:17.438363+00:00"
+}

@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "ttionya/vaultwarden-backup",
+  "url": "https://github.com/ttionya/vaultwarden-backup",
+  "description": "Backup vaultwarden (formerly known as bitwarden_rs) SQLite3/PostgreSQL/MySQL/MariaDB database by rclone. (Docker)",
+  "stars": 1815,
+  "discovered_at": "2026-07-09T14:39:15.765320+00:00"
+}

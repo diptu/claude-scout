@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "restic/rest-server",
+  "url": "https://github.com/restic/rest-server",
+  "description": "Rest Server is a high performance HTTP server that implements restic's REST backend API.",
+  "stars": 1446,
+  "discovered_at": "2026-07-09T14:39:10.797727+00:00"
+}

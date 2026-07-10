@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "labring/sealos",
+  "url": "https://github.com/labring/sealos",
+  "description": "Sealos is an AI-native Cloud Operating System that unifies the entire application lifecycle, from development in cloud IDEs to production deployment and management. It is perfect for building and scaling modern AI applications, managed databases (MySQL, PostgreSQL, Redis, MongoDB) and complex microservice architectures.",
+  "stars": 18274,
+  "discovered_at": "2026-07-08T12:59:04.031384+00:00"
+}

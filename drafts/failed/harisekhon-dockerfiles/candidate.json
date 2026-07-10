@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "HariSekhon/Dockerfiles",
+  "url": "https://github.com/HariSekhon/Dockerfiles",
+  "description": "50+ DockerHub public images for Docker & Kubernetes - DevOps, CI/CD, GitHub Actions, CircleCI, Jenkins, TeamCity, Alpine, CentOS, Debian, Fedora, Ubuntu, Hadoop, Kafka, ZooKeeper, HBase, Cassandra, Solr, SolrCloud, Presto, Apache Drill, Nifi, Spark, Consul, Riak",
+  "stars": 1380,
+  "discovered_at": "2026-07-09T14:40:12.204521+00:00"
+}

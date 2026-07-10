@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "swagger-api/swagger-codegen",
+  "url": "https://github.com/swagger-api/swagger-codegen",
+  "description": "swagger-codegen contains a template-driven engine to generate documentation, API clients and server stubs in different languages by parsing your OpenAPI / Swagger definition.",
+  "stars": 17767,
+  "discovered_at": "2026-07-08T13:00:07.239233+00:00"
+}

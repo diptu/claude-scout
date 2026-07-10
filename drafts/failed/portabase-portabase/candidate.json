@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "Portabase/portabase",
+  "url": "https://github.com/Portabase/portabase",
+  "description": "Portabase - Database backup & restore tool for PostgreSQL, MySQL, MsSQL, MariaDB, Firebird SQL, SQLite, MongoDB, Redis and Docker Volume ",
+  "stars": 1096,
+  "discovered_at": "2026-07-09T14:40:11.088591+00:00"
+}

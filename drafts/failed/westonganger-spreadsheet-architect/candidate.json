@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "westonganger/spreadsheet_architect",
+  "url": "https://github.com/westonganger/spreadsheet_architect",
+  "description": "Spreadsheet Architect is a library that allows you to create XLSX, ODS, or CSV spreadsheets super easily from ActiveRecord relations, plain Ruby objects, or tabular data.",
+  "stars": 1349,
+  "discovered_at": "2026-07-09T14:39:13.099698+00:00"
+}

@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "swaggo/swag",
+  "url": "https://github.com/swaggo/swag",
+  "description": "Automatically generate RESTful API documentation with Swagger 2.0 for Go.",
+  "stars": 12901,
+  "discovered_at": "2026-07-08T13:00:07.239271+00:00"
+}

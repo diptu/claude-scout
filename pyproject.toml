@@ -35,8 +35,9 @@ files = ["src"]
 
 [tool.pylint."messages control"]
 disable = [
-    # TODO.md principle 2: the GitHub/Reddit harvesters deliberately
-    # duplicate each other rather than sharing a BaseScraper abstraction.
+    # CLAUDE.md principle 2: the GitHub/Reddit/Twitter/YouTube/TikTok
+    # harvesters deliberately duplicate each other's fetch/parse shape
+    # rather than sharing a BaseScraper abstraction.
     "duplicate-code",
     # Module docstrings are required (C0114 stays on); per-function
     # docstrings are not, matching the project's lean style.

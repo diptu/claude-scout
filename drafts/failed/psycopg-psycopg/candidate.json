@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "psycopg/psycopg",
+  "url": "https://github.com/psycopg/psycopg",
+  "description": "New generation PostgreSQL database adapter for the Python programming language ",
+  "stars": 2437,
+  "discovered_at": "2026-07-09T14:39:15.765309+00:00"
+}

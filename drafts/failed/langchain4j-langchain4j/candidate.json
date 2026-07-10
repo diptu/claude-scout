@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "langchain4j/langchain4j",
+  "url": "https://github.com/langchain4j/langchain4j",
+  "description": "LangChain4j is an idiomatic, open-source Java library for building LLM-powered applications on the JVM. It offers a unified API over popular LLM providers and vector stores, and makes implementing tool calling (including MCP support), agents and RAG easy. It integrates seamlessly with enterprise Java frameworks like Quarkus and Spring Boot.",
+  "stars": 12565,
+  "discovered_at": "2026-07-09T14:42:14.800959+00:00"
+}

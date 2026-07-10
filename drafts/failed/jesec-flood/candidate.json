@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "jesec/flood",
+  "url": "https://github.com/jesec/flood",
+  "description": "A modern web UI for various torrent clients with a Node.js backend and React frontend.",
+  "stars": 2801,
+  "discovered_at": "2026-07-09T14:42:12.426871+00:00"
+}

@@ -105,6 +105,12 @@ def review() -> None:
         skill_md = (draft_dir / "SKILL.md").read_text(encoding="utf-8", errors="replace")
         candidate = read_json(draft_dir / "candidate.json", default={})
         print(f"\n=== {draft_dir.name} ===")
+        committee_verdict = read_json(draft_dir / "committee_verdict.json", default=None)
+        if committee_verdict:
+            print(f"committee: hired at {committee_verdict.get('overall_score')}/5")
+        council_verdict = read_json(draft_dir / "council_verdict.json", default=None)
+        if council_verdict:
+            print(f"council: {council_verdict.get('decision')} — {council_verdict.get('reason')}")
         print(skill_md[:400])
         choice = input("[p]romote / [t]rash / [s]kip / [q]uit? ").strip().lower()
 

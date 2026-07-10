@@ -5,17 +5,53 @@
 
 github:
   # Minimum stargazer count a repo needs to become a candidate.
-  min_stars: 20000
+  min_stars: 1000
   # Only consider repos pushed to within the last N days.
   max_age_days: 180
   # Search terms matched against repo name and description.
   keywords:
-    - UI-UX
-    - data-architect
-    - Reactjs
-    # - claude skill
-    # - claude code agent
-    # - mcp server
+  - ai-engineer
+  - backend-event-driven
+  - backend-fastapi
+  - backend-rest-api
+  - cloud-architect
+  - cto
+  - data-architect
+  - database-engineer
+  - database-postgresql
+  - database-redis
+  - devops-docker
+  - devops-kubernetes
+  - devops-observability
+  - devops-sre
+  - devops-terraform
+  - documentation
+  - engineering-audit
+  - engineering-code-review
+  - engineering-manager
+  - enterprise-architect
+  - frontend-accessibility
+  - frontend-performance
+  - frontend-react
+  - frontend-typescript
+  - llm-agents
+  - llm-prompt-engineering
+  - llm-rag
+  - ml-architect
+  - product-manager
+  - qa-engineers
+  - research
+  - security-architect
+  - security-encryption
+  - security-jwt-oauth
+  - software-architect
+  - sre
+  - technical-program-manager
+  - test-automation-engineer
+  - ui-ux-engineers
+  - ux-researcher
+  - claude skill
+   
 
 reddit:
   # Minimum post score (upvotes) for a post to become a candidate.
@@ -26,20 +62,206 @@ reddit:
   max_age_days: 7
   # Subreddits scanned by the harvester.
   subreddits:
-    - UI-UX
-    - data-architect
-    - Reactjs
-    # - ClaudeAI
-    # - LocalLLaMA
-    # - Anthropic
+    - ClaudeAI
+    - LocalLLaMA
+    - Anthropic
+    - llm-council
   # A post qualifies only if its title/body mentions one of these keywords.
   keywords:
-    - UI-UX
+    - ai-engineer
+    - backend-event-driven
+    - backend-fastapi
+    - backend-rest-api
+    - cloud-architect
+    - cto
     - data-architect
-    - Reactjs
-    # - claude skill
-    # - claude code agent
-    # - mcp server
+    - database-engineer
+    - database-postgresql
+    - database-redis
+    - devops-docker
+    - devops-kubernetes
+    - devops-observability
+    - devops-sre
+    - devops-terraform
+    - documentation
+    - engineering-audit
+    - engineering-code-review
+    - engineering-manager
+    - enterprise-architect
+    - frontend-accessibility
+    - frontend-performance
+    - frontend-react
+    - frontend-typescript
+    - llm-agents
+    - llm-prompt-engineering
+    - llm-rag
+    - ml-architect
+    - product-manager
+    - qa-engineers
+    - research
+    - security-architect
+    - security-encryption
+    - security-jwt-oauth
+    - software-architect
+    - sre
+    - technical-program-manager
+    - test-automation-engineer
+    - ui-ux-engineers
+    - ux-researcher
+    - claude skill
+
+twitter:
+  # Requires TWITTER_BEARER_TOKEN; degrades to a no-op without it.
+  # Minimum likes + retweets for a tweet to become a candidate.
+  min_engagement: 50
+  # X's recent-search endpoint only covers the last 7 days regardless of
+  # this value; it just narrows start_time within that window.
+  max_age_days: 7
+  # Search terms matched against tweet text.
+  keywords:
+    - ai-engineer
+    - backend-event-driven
+    - backend-fastapi
+    - backend-rest-api
+    - cloud-architect
+    - cto
+    - data-architect
+    - database-engineer
+    - database-postgresql
+    - database-redis
+    - devops-docker
+    - devops-kubernetes
+    - devops-observability
+    - devops-sre
+    - devops-terraform
+    - documentation
+    - engineering-audit
+    - engineering-code-review
+    - engineering-manager
+    - enterprise-architect
+    - frontend-accessibility
+    - frontend-performance
+    - frontend-react
+    - frontend-typescript
+    - llm-agents
+    - llm-prompt-engineering
+    - llm-rag
+    - ml-architect
+    - product-manager
+    - qa-engineers
+    - research
+    - security-architect
+    - security-encryption
+    - security-jwt-oauth
+    - software-architect
+    - sre
+    - technical-program-manager
+    - test-automation-engineer
+    - ui-ux-engineers
+    - ux-researcher
+    - claude skill
+
+youtube:
+  # Requires YOUTUBE_API_KEY; degrades to a no-op without it.
+  # Minimum view count for a video to become a candidate.
+  min_views: 1000
+  # Only consider videos published within the last N days.
+  max_age_days: 180
+  # Search terms matched against video title/description.
+  keywords:
+    - ai-engineer
+    - backend-event-driven
+    - backend-fastapi
+    - backend-rest-api
+    - cloud-architect
+    - cto
+    - data-architect
+    - database-engineer
+    - database-postgresql
+    - database-redis
+    - devops-docker
+    - devops-kubernetes
+    - devops-observability
+    - devops-sre
+    - devops-terraform
+    - documentation
+    - engineering-audit
+    - engineering-code-review
+    - engineering-manager
+    - enterprise-architect
+    - frontend-accessibility
+    - frontend-performance
+    - frontend-react
+    - frontend-typescript
+    - llm-agents
+    - llm-prompt-engineering
+    - llm-rag
+    - ml-architect
+    - product-manager
+    - qa-engineers
+    - research
+    - security-architect
+    - security-encryption
+    - security-jwt-oauth
+    - software-architect
+    - sre
+    - technical-program-manager
+    - test-automation-engineer
+    - ui-ux-engineers
+    - ux-researcher
+    - claude skill
+
+tiktok:
+  # Requires TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET (gated Research API
+  # access); degrades to a no-op without them.
+  # Minimum view count for a video to become a candidate.
+  min_views: 1000
+  # Only consider videos posted within the last N days (max 30, per the
+  # Research API's per-query date-range limit).
+  max_age_days: 30
+  # Search terms matched against video description.
+  keywords:
+    - ai-engineer
+    - backend-event-driven
+    - backend-fastapi
+    - backend-rest-api
+    - cloud-architect
+    - cto
+    - data-architect
+    - database-engineer
+    - database-postgresql
+    - database-redis
+    - devops-docker
+    - devops-kubernetes
+    - devops-observability
+    - devops-sre
+    - devops-terraform
+    - documentation
+    - engineering-audit
+    - engineering-code-review
+    - engineering-manager
+    - enterprise-architect
+    - frontend-accessibility
+    - frontend-performance
+    - frontend-react
+    - frontend-typescript
+    - llm-agents
+    - llm-prompt-engineering
+    - llm-rag
+    - ml-architect
+    - product-manager
+    - qa-engineers
+    - research
+    - security-architect
+    - security-encryption
+    - security-jwt-oauth
+    - software-architect
+    - sre
+    - technical-program-manager
+    - test-automation-engineer
+    - ui-ux-engineers
+    - ux-researcher
+    - claude skill
 
 # Hiring-committee gate: after a draft passes eval, each voter below scores it
 # 1-5 on usefulness/uniqueness/quality/safety (see prompts/committee.md). The
@@ -62,3 +284,22 @@ committee:
       focus: Safety — free of destructive actions, prompt-injection risk, or unsafe credential handling.
     - name: QA Lead
       focus: Clarity and testability of the steps — would a reviewer know if it worked?
+
+# LLM Council gate: runs after committee.py hires a draft, before anything is
+# promoted. Five advisors (mirrors .claude/skills/llm-council) each vote
+# add/skip on whether the candidate is worth adding given the existing
+# library/ catalog, then a chairman synthesizes one final decision (see
+# prompts/council_advisor.md, prompts/council_chairman.md). "skip" trashes
+# the draft automatically; "add" leaves it in drafts/ for `make review`.
+council:
+  advisors:
+    - name: The Contrarian
+      lens: Search for fatal flaws and overlooked risks in adding this — argue for *not* adding it if a good case exists.
+    - name: The First Principles Thinker
+      lens: Question whether this is really a new capability or just a rephrasing of something already in the library.
+    - name: The Expansionist
+      lens: Look for upside — does this cover real ground the existing library doesn't, even if it overlaps partially?
+    - name: The Outsider
+      lens: Judge with no attachment to either the candidate or the existing library — is this obviously redundant bookkeeping, or a genuine gap being filled?
+    - name: The Executor
+      lens: Focus on practical outcome — if added, would anyone actually reach for this over what's already there?

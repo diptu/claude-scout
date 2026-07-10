@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "create-go-app/cli",
+  "url": "https://github.com/create-go-app/cli",
+  "description": "\u2728 A complete and self-contained solution for developers of any qualification to create a production-ready project with backend (Go), frontend (JavaScript, TypeScript) and deploy automation (Ansible, Docker) by running only one CLI command.",
+  "stars": 2766,
+  "discovered_at": "2026-07-09T14:42:13.251967+00:00"
+}

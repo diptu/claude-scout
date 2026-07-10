@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "pgdogdev/pgdog",
+  "url": "https://github.com/pgdogdev/pgdog",
+  "description": "PostgreSQL connection pooler, load balancer and database sharder.",
+  "stars": 5207,
+  "discovered_at": "2026-07-09T14:39:15.765276+00:00"
+}

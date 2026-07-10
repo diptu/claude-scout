@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "esengine/DeepSeek-Reasonix",
+  "url": "https://github.com/esengine/DeepSeek-Reasonix",
+  "description": "DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stability \u2014 leave it running.",
+  "stars": 26400,
+  "discovered_at": "2026-07-08T12:58:00.552443+00:00"
+}

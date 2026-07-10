@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "fastapi-practices/fastapi-best-architecture",
+  "url": "https://github.com/fastapi-practices/fastapi-best-architecture",
+  "description": "Enterprise-level backend architecture solution with fastapi\u3001sqlalchemy,\u3001celery\u3001pydantic\u3001grafana\u3001docker...",
+  "stars": 2364,
+  "discovered_at": "2026-07-09T14:38:43.666676+00:00"
+}

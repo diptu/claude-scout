@@ -6,7 +6,7 @@ import time
 import requests
 
 from scout.core.config import PROJECT_ROOT, load_config
-from scout.core.util import read_json, write_json
+from scout.services import harvest_common
 
 CANDIDATES_DIR = PROJECT_ROOT / "candidates"
 SEEN_FILE = CANDIDATES_DIR / "seen.txt"
@@ -17,33 +17,6 @@ API_URL = "https://api.github.com/search/repositories"
 RATE_LIMIT_SLEEP_THRESHOLD = 5
 MIN_STARS = 50
 MAX_AGE_DAYS = 180
-
-
-def _load_seen() -> set:
-    if not SEEN_FILE.exists():
-        return set()
-    return set(SEEN_FILE.read_text().splitlines())
-
-
-def _library_urls() -> set:
-    """URLs already promoted to library/ — checked in addition to seen.txt
-    so a reset-harvest (which wipes seen.txt) doesn't re-add skills that
-    are already curated."""
-    if not LIBRARY_DIR.exists():
-        return set()
-    urls = set()
-    for entry in LIBRARY_DIR.iterdir():
-        url = read_json(entry / "meta.json", default={}).get("source_url")
-        if url:
-            urls.add(url)
-    return urls
-
-
-def _append_seen(urls) -> None:
-    SEEN_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with SEEN_FILE.open("a") as f:
-        for url in urls:
-            f.write(url + "\n")
 
 
 def _headers() -> dict:
@@ -68,7 +41,7 @@ def run(limit=None) -> dict:
     max_age_days = cfg.get("max_age_days", MAX_AGE_DAYS)
     keywords = cfg.get("keywords", KEYWORDS)
 
-    seen = _load_seen() | _library_urls()
+    seen = harvest_common.load_seen(SEEN_FILE) | harvest_common.library_urls(LIBRARY_DIR)
     new_urls: list[str] = []
     new_candidates: list[dict] = []
     errors = 0
@@ -111,10 +84,6 @@ def run(limit=None) -> dict:
         if limit is not None and len(new_candidates) >= limit:
             break
 
-    if new_candidates:
-        today_file = CANDIDATES_DIR / f"discovery-{datetime.date.today().isoformat()}.json"
-        existing = read_json(today_file, default=[])
-        write_json(today_file, existing + new_candidates)
-        _append_seen(new_urls)
+    harvest_common.write_candidates(CANDIDATES_DIR, SEEN_FILE, new_candidates, new_urls)
 
     return {"new": len(new_candidates), "seen_skipped": seen_skipped, "errors": errors}

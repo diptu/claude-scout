@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "NVIDIA/ChatRTX",
+  "url": "https://github.com/NVIDIA/ChatRTX",
+  "description": "A developer reference project for creating Retrieval Augmented Generation (RAG) chatbots on Windows using TensorRT-LLM",
+  "stars": 3125,
+  "discovered_at": "2026-07-09T14:42:17.438370+00:00"
+}

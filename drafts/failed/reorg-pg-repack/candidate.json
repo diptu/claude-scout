@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "reorg/pg_repack",
+  "url": "https://github.com/reorg/pg_repack",
+  "description": "Reorganize tables in PostgreSQL databases with minimal locks",
+  "stars": 2276,
+  "discovered_at": "2026-07-09T14:39:15.765311+00:00"
+}

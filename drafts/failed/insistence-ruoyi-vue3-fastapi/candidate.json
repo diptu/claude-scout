@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "insistence/RuoYi-Vue3-FastAPI",
+  "url": "https://github.com/insistence/RuoYi-Vue3-FastAPI",
+  "description": "\u57fa\u4e8eVue3+Element Plus+FastAPI\u5f00\u53d1\u7684\u4e00\u4e2a\u901a\u7528\u4e2d\u540e\u53f0\u7ba1\u7406\u6846\u67b6\uff08\u82e5\u4f9d\u7684FastAPI\u7248\u672c\uff09\uff0c\u652f\u6301\u4ee3\u7801\u751f\u6210\u3002A general middle and backend management framework developed with Vue3 + Element Plus + FastAPI (FastAPI Edition of RuoYi), supporting code generation.",
+  "stars": 1427,
+  "discovered_at": "2026-07-09T14:38:43.666704+00:00"
+}

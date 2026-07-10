@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "awslabs/aws-solutions-constructs",
+  "url": "https://github.com/awslabs/aws-solutions-constructs",
+  "description": "The AWS Solutions Constructs Library is an open-source extension of the AWS Cloud Development Kit (AWS CDK) that provides multi-service, well-architected patterns for quickly defining solutions",
+  "stars": 1353,
+  "discovered_at": "2026-07-09T14:39:11.566400+00:00"
+}

@@ -1,72 +1,42 @@
 ---
-name: caveman-mode
-description: Strips filler words, hedging, and verbose phrasing from Claude's responses to cut token usage while preserving meaning; use when the user asks for brevity, low-cost/low-latency interaction, or explicitly requests a terse or "caveman" style.
+name: caveman-brevity
+description: Strips filler words, hedging, and verbose phrasing from responses to cut token usage while preserving meaning; use when the user asks for brevity, low-cost/low-latency interaction, or explicitly requests a terse or "caveman" style.
 ---
 
-# Caveman Mode
+# Caveman Brevity
 
-This skill helps Claude produce maximally information-dense responses by
-stripping words that don't carry meaning. It trades polish for token
-efficiency: fewer articles, fewer connective phrases, fewer hedges, same
-facts.
+Compress output to bare meaning. Cut every word that doesn't carry new information. Use when the user asks for brevity, terse answers, "caveman mode," minimal tokens, or fast/cheap responses.
 
 ## When to apply
 
-Apply this skill when:
+- User explicitly asks for short, terse, brief, or "caveman"-style answers.
+- User says something like "no filler," "skip the preamble," "just the answer," or "save tokens."
+- A session is clearly optimizing for token cost or latency over polish.
 
-- The user explicitly asks for brevity, terseness, or "caveman" style
-  ("talk like caveman", "few token", "cut the fluff", "no filler").
-- The user says they're optimizing for token cost or response latency and
-  wants shorter output by default for the rest of the session.
-- The user asks to rewrite or compress existing text/output to use fewer
-  tokens without losing meaning.
-
-Do not apply this skill when the user hasn't asked for brevity — default to
-normal, natural phrasing. Do not apply it to code, config, commands, or any
-output the user will copy verbatim; only apply it to prose Claude writes to
-communicate with the user. Never drop meaning-bearing information (numbers,
-names, conditions, caveats) just to save words — the goal is dropping filler,
-not dropping content.
+Do not apply this to: code you write (keep normal code style and comments), technical accuracy, safety caveats that are actually load-bearing, or any response where the user hasn't asked for brevity — don't degrade default output quality uninvited.
 
 ## What to strip
 
-- Articles ("the", "a", "an") where meaning survives without them.
-- Hedges and softeners ("I think", "it seems", "just to note", "basically",
-  "essentially", "in order to").
-- Politeness padding ("please note that", "I'd be happy to", "let me know if
-  you have any questions").
-- Restating the question before answering it.
-- Trailing summaries that repeat what was just said.
-- Transition phrases that add no information ("as you can see",
-  "moving on to", "with that said").
-- Full sentences where a fragment communicates the same fact.
+- **Hedging and softeners**: "I think," "it seems like," "perhaps," "just to clarify," "I want to make sure," "to be honest."
+- **Throat-clearing preambles**: "Great question!", "Sure, I'd be happy to help with that," "Let me explain."
+- **Restating the question**: don't repeat what the user asked before answering it.
+- **Redundant transitions**: "In addition," "Furthermore," "It's also worth noting that" — just state the next fact.
+- **Summary recaps**: don't restate what you just said at the end of an answer.
+- **Passive/roundabout phrasing**: convert "It is recommended that you use X" to "Use X."
+- **Multiple synonyms for the same point**: say it once.
 
 ## What to keep
 
-- All facts, numbers, file paths, names, error messages, and conditions.
-- Negation ("not", "don't", "never") — dropping these inverts meaning.
-- Enough grammar that the sentence is unambiguous. Compression must not
-  create ambiguity about who did what to what.
-- Code blocks, commands, and file contents: always verbatim, never
-  compressed.
+- The actual answer, fact, or instruction — never cut content, only cut wrapping.
+- Necessary technical qualifiers (units, versions, error conditions) that change correctness if omitted.
+- Code blocks, exact commands, and exact values — never compress these into prose or shorthand.
+- Enough grammar to stay unambiguous. Drop articles and connective words when meaning survives; keep them when dropping them creates ambiguity.
 
-## Step-by-step guidance
+## How to apply
 
-1. Draft the response normally in your head — get the facts straight first.
-2. Cut every word from the "what to strip" list that isn't load-bearing.
-3. Collapse multi-sentence explanations into fragments or short clauses
-   joined by commas/dashes instead of full connective sentences.
-4. Re-read the compressed version and confirm no fact, number, name, or
-   negation was lost — if a cut creates ambiguity, add back the minimum
-   words needed to resolve it.
-5. Stop compressing once further cuts would force the reader to guess at
-   meaning — the target is fewer tokens for the same information, not a
-   puzzle.
-
-## Example
-
-Verbose: "I think it's probably best if we just go ahead and delete the
-temporary file, since it looks like it's no longer being used by anything in
-the codebase."
-
-Caveman: "Delete temp file — unused."
+1. Draft the answer normally in your head — get the content right first.
+2. Rewrite it by deleting every clause that doesn't add new information: no intros, no recaps, no hedges.
+3. Merge sentences that state the same fact from different angles into one.
+4. Read the compressed version back: if a sentence could be cut without losing information, cut it.
+5. Keep formatting (code fences, lists) exactly as accurate and complete as an unabbreviated answer would — brevity applies to prose, not to correctness or to code content.
+6. If the user's request is genuinely simple, one line is a complete answer — don't pad it back out to look thorough.

@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "cloudposse/atmos",
+  "url": "https://github.com/cloudposse/atmos",
+  "description": "\ud83d\udc7d Terraform Orchestration Tool for DevOps. Keep environment configuration DRY with hierarchical imports of configurations, inheritance, and WAY more. Native support for Terraform and Helmfile.",
+  "stars": 1330,
+  "discovered_at": "2026-07-09T14:40:15.803959+00:00"
+}

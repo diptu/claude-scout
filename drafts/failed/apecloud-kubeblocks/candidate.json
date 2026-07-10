@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "apecloud/kubeblocks",
+  "url": "https://github.com/apecloud/kubeblocks",
+  "description": "KubeBlocks is a Kubernetes Operator designed to manage a variety of databases and streaming systems, including MySQL, PostgreSQL, MongoDB, Redis, RabbitMQ, RocketMQ, and more, within Kubernetes environments.",
+  "stars": 3078,
+  "discovered_at": "2026-07-09T14:39:15.765306+00:00"
+}

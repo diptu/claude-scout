@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "apache/hugegraph",
+  "url": "https://github.com/apache/hugegraph",
+  "description": "A graph database that supports more than 100+ billion data, high performance and scalability (Include OLTP Engine & REST-API & Backends)",
+  "stars": 3124,
+  "discovered_at": "2026-07-09T14:39:10.797697+00:00"
+}

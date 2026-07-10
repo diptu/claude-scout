@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "sqlcipher/sqlcipher",
+  "url": "https://github.com/sqlcipher/sqlcipher",
+  "description": "SQLCipher is a standalone fork of SQLite that adds 256 bit AES encryption of database files and other security features.",
+  "stars": 7201,
+  "discovered_at": "2026-07-09T14:43:17.244890+00:00"
+}

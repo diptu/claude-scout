@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "microsoft/pg_durable",
+  "url": "https://github.com/microsoft/pg_durable",
+  "description": "PostgreSQL in-database durable execution",
+  "stars": 2215,
+  "discovered_at": "2026-07-09T14:39:15.765314+00:00"
+}

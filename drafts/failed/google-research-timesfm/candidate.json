@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "google-research/timesfm",
+  "url": "https://github.com/google-research/timesfm",
+  "description": "TimesFM (Time Series Foundation Model) is a pretrained time-series foundation model developed by Google Research for time-series forecasting.",
+  "stars": 26655,
+  "discovered_at": "2026-07-08T13:04:22.289465+00:00"
+}

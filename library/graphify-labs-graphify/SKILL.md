@@ -1,91 +1,40 @@
 ---
-name: code-knowledge-graph
-description: Build a lightweight knowledge graph linking application code, database/SQL schemas, infrastructure config, and docs into one connected model, then use it to answer cross-cutting questions about a codebase; use when a task requires tracing how a change in one artifact (a column, function, endpoint, or config value) ripples through the rest of the system.
+name: codebase-knowledge-graph
+description: Build a lightweight knowledge graph linking application code, database schemas, infrastructure config, and docs into one connected model, and use it to trace how a change in one artifact ripples through the rest of the system.
 ---
 
-# Code Knowledge Graph
+# Codebase Knowledge Graph
 
-## What this helps with
+This skill helps Claude answer cross-cutting questions about a codebase that a single-file or single-directory search can't answer well — questions like "what breaks if I rename this column," "what calls this endpoint," or "which services depend on this config value." Instead of treating code, SQL schemas, infrastructure files, and docs as separate silos, it builds a mental (or written) graph connecting them by shared identifiers: table/column names, function/class names, API routes, environment variables, and config keys.
 
-Real systems are rarely just application code. A single change — renaming a
-database column, changing an API response shape, editing a Terraform
-resource — can ripple through SQL schemas, ORM models, shell scripts, CI
-config, and docs that were never in the same file or even the same
-language. Grepping one artifact type at a time misses these connections.
-This skill gives Claude a repeatable way to assemble a small, explicit graph
-of entities (functions, tables, endpoints, config keys, infra resources,
-docs) and the edges between them (calls, reads, writes, defines,
-depends_on, configures, documents) so that cross-artifact questions get
-answered by tracing real connections instead of guessing from naming
-similarity.
+## When to apply this skill
 
-## When to apply it
+Apply this when a task requires understanding relationships across artifact types, not just within one file. Signals that this skill is relevant:
 
-Use this skill when a question is relational, not local:
+- The user asks "what depends on X" or "what would break if I changed X."
+- The user asks to trace a database column, config key, or environment variable through the codebase into the application layer (or vice versa).
+- The user is planning a schema migration, API contract change, or config rename and wants a blast-radius assessment before making it.
+- The user wants an overview of how a project's pieces (app code, database, infra, docs) fit together.
+- A bug report mentions symptoms in one layer (e.g. a UI field showing wrong data) that likely originate in another (a SQL query, a migration, an infra setting).
 
-- Impact analysis: "what breaks if I change/rename/drop this column,
-  function, or config value?"
-- Dependency tracing: "what calls this endpoint?", "what services read from
-  this table or queue?", "what infra depends on this resource?"
-- Onboarding-style questions: "how does data flow from the API into the
-  database and out to the reporting job?"
-- Cross-artifact consistency checks: does the SQL schema match the ORM
-  models? Does the infra config expose a port the app actually listens on?
-  Do the docs describe endpoints or scripts that no longer exist?
+Don't apply it for purely local tasks (fixing a bug confined to one function, writing a new isolated feature) where there's nothing to trace across artifact boundaries.
 
-Skip this skill for single-file edits, isolated bug fixes, or anything
-answerable by reading one file — building even a small graph is overhead
-that only pays off once a question spans multiple artifacts.
+## Step-by-step approach
 
-## Step-by-step guidance
+1. **Identify the artifact types present.** Scan the repository for the categories of files relevant to the question: application source code, SQL migrations/schema files, infrastructure-as-code (Terraform, Docker Compose, Kubernetes manifests, CI configs), and documentation (README, docs/, ADRs). Not every project has all of these — work with what exists.
 
-1. **Pin down the starting entity and the question.** Before reading
-   anything, state which specific entity the question starts from (a
-   table, function, endpoint, config key, or infra resource) and what
-   direction matters — forward ("what does this affect?") or backward
-   ("what does this depend on?"). This keeps the graph bounded to what the
-   question actually needs.
+2. **Extract the node set for the query at hand.** Rather than indexing the entire repo up front, start from the specific identifier the user cares about (a table name, column, function, endpoint path, env var, or config key) and treat that as the seed node.
 
-2. **Classify the artifact types in play.** Decide up front which of these
-   are plausibly relevant: application code, SQL/schema definitions and
-   migrations, infrastructure-as-code (Terraform, Kubernetes, Docker,
-   CI/CD config), shell/utility scripts, and documentation. Don't scan
-   artifact types that couldn't plausibly connect to the starting entity.
+3. **Find edges by shared identifiers, not just imports.** Search for the seed identifier's exact name and its common variant forms (snake_case, camelCase, kebab-case, pluralized) across:
+   - Application code: variable names, struct/class fields, ORM model definitions, API route strings.
+   - Database layer: column/table definitions in schema files and migrations, foreign key references.
+   - Infrastructure: environment variable names in Dockerfiles, Compose files, Terraform variables, CI/CD pipeline YAML.
+   - Docs: mentions in README/docs that describe the same concept, which may reveal intended behavior not obvious from code alone.
 
-3. **Extract entities with stable identifiers as you read.** For each file
-   opened while investigating, record entities in a consistent form, e.g.:
-   - `table:orders` — Postgres table, defined in `db/migrations/012_orders.sql`
-   - `func:create_order` — in `src/api/orders.py`, inserts into `orders`
-   - `endpoint:POST /orders` — routes to `create_order`
-   - `resource:orders-worker` — ECS task in `infra/orders.tf`, consumes the
-     queue this endpoint publishes to
+4. **Build a connected picture before proposing changes.** Assemble what you find into an explicit list or short diagram (in your response, not a new file unless asked) showing: seed node → what reads it → what writes it → what config or infra it depends on → what would need to change alongside it. This is the "graph" — it doesn't need a database or visualization tool, just an explicit enumeration of connected artifacts.
 
-4. **Record edges explicitly, not from naming alone.** For every
-   relationship noticed, write a directed edge with a kind — `calls`,
-   `reads`, `writes`, `defines`, `depends_on`, `configures`, `documents`.
-   Prefer edges backed by a specific line of code or config over ones
-   inferred from similar names; label inferred edges as "likely,
-   unconfirmed" rather than asserting them as fact.
+5. **Flag gaps and ambiguity.** If the same conceptual entity appears to have inconsistent names across layers (e.g. `user_id` in SQL but `userId` in app code and `USER_ID` in an env var), call this out explicitly rather than silently assuming they're the same or different — ask the user to confirm if it's ambiguous and the consequences of being wrong are significant.
 
-5. **Keep the graph as scratch reasoning, not a deliverable.** Hold the
-   entity/edge list inline in reasoning (or a scratch note for a large
-   task) only for as long as the task needs it — it's a working structure,
-   not documentation to persist unless the user explicitly asked for one.
+6. **Answer the ripple-effect question directly.** Once the connected artifacts are enumerated, give a concrete answer: what breaks, what needs a coordinated change, and in what order (e.g. migration before deploy, or deploy before migration, depending on backward compatibility needs).
 
-6. **Traverse before answering.** Once enough entities and edges are
-   collected, walk the graph from the starting entity to the depth the
-   question requires, and state the path taken so the answer is
-   verifiable, e.g. "`table:orders` → `func:create_order` (writes) →
-   `endpoint:POST /orders` (defines) → `resource:orders-worker`
-   (depends_on)."
-
-7. **Separate confirmed edges from guesses in the final answer.** When
-   reporting impact or dependencies, explicitly flag which links were
-   confirmed by reading code/config versus which are plausible but
-   unverified — this avoids overstating the blast radius of a change.
-
-8. **Re-scope if the trace grows unbounded.** If tracing pulls in dozens of
-   unrelated entities, stop and revisit step 1: either the starting entity
-   is too central (a shared utility, a widely-used config key) and the
-   question needs narrowing, or the system genuinely has that much fan-out
-   and the answer should say so rather than silently truncating the trace.
+7. **Prefer showing the trace over hiding it.** When presenting the answer, show the chain of references that led to the conclusion (file paths and line numbers where possible) so the user can verify the reasoning rather than trusting an opaque conclusion.

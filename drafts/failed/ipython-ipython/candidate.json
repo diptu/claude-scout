@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "ipython/ipython",
+  "url": "https://github.com/ipython/ipython",
+  "description": "Official repository for IPython itself. Other repos in the IPython organization contain things like the website, documentation builds, etc.",
+  "stars": 16735,
+  "discovered_at": "2026-07-08T13:00:07.239236+00:00"
+}

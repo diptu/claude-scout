@@ -1,0 +1,8 @@
+{
+  "source": "github",
+  "name": "microsoft/RD-Agent",
+  "url": "https://github.com/microsoft/RD-Agent",
+  "description": "Research and development (R&D) is crucial for the enhancement of industrial productivity, especially in the AI era, where the core aspects of R&D are mainly focused on data and models. We are committed to automating these high-value generic R&D processes through R&D-Agent, which lets AI drive data-driven AI. \ud83d\udd17https://aka.ms/RD-Agent-Tech-Report",
+  "stars": 13819,
+  "discovered_at": "2026-07-08T13:04:22.289564+00:00"
+}
